@@ -1,0 +1,332 @@
+ticker,exchange,name,aliases,sector,ambiguous
+AAPL,NASDAQ,Apple Inc.,Apple,Technology,1
+MSFT,NASDAQ,Microsoft Corporation,Microsoft,Technology,0
+NVDA,NASDAQ,NVIDIA Corporation,Nvidia|NVIDIA,Technology,0
+GOOGL,NASDAQ,Alphabet Inc.,Alphabet|Google|YouTube|DeepMind|Waymo,Technology,0
+AMZN,NASDAQ,Amazon.com Inc.,Amazon|AWS,Consumer Discretionary,1
+META,NASDAQ,Meta Platforms Inc.,Meta|Facebook|Instagram|WhatsApp,Technology,1
+TSLA,NASDAQ,Tesla Inc.,Tesla,Consumer Discretionary,0
+AVGO,NASDAQ,Broadcom Inc.,Broadcom,Technology,0
+AMD,NASDAQ,Advanced Micro Devices,AMD,Technology,0
+INTC,NASDAQ,Intel Corporation,Intel,Technology,0
+MU,NASDAQ,Micron Technology,Micron,Technology,0
+QCOM,NASDAQ,Qualcomm Inc.,Qualcomm,Technology,0
+TXN,NASDAQ,Texas Instruments,Texas Instruments,Technology,0
+ARM,NASDAQ,Arm Holdings,Arm Holdings,Technology,0
+TSM,NYSE,Taiwan Semiconductor,TSMC|Taiwan Semiconductor,Technology,0
+ASML,NASDAQ,ASML Holding,ASML,Technology,0
+AMAT,NASDAQ,Applied Materials,Applied Materials,Technology,0
+LRCX,NASDAQ,Lam Research,Lam Research,Technology,0
+KLAC,NASDAQ,KLA Corporation,KLA Corp|KLA Corporation,Technology,0
+SMCI,NASDAQ,Super Micro Computer,Super Micro|Supermicro,Technology,0
+DELL,NYSE,Dell Technologies,Dell,Technology,0
+HPQ,NYSE,HP Inc.,HP Inc,Technology,0
+IBM,NYSE,International Business Machines,IBM,Technology,0
+ORCL,NYSE,Oracle Corporation,Oracle,Technology,1
+CRM,NYSE,Salesforce Inc.,Salesforce,Technology,0
+NOW,NYSE,ServiceNow Inc.,ServiceNow,Technology,0
+SAP,NYSE,SAP SE,SAP,Technology,0
+ADBE,NASDAQ,Adobe Inc.,Adobe,Technology,0
+SNOW,NYSE,Snowflake Inc.,Snowflake,Technology,1
+PLTR,NASDAQ,Palantir Technologies,Palantir,Technology,0
+MDB,NASDAQ,MongoDB Inc.,MongoDB,Technology,0
+DDOG,NASDAQ,Datadog Inc.,Datadog,Technology,0
+NET,NYSE,Cloudflare Inc.,Cloudflare,Technology,0
+CRWD,NASDAQ,CrowdStrike Holdings,CrowdStrike,Technology,0
+PANW,NASDAQ,Palo Alto Networks,Palo Alto Networks,Technology,0
+ZS,NASDAQ,Zscaler Inc.,Zscaler,Technology,0
+FTNT,NASDAQ,Fortinet Inc.,Fortinet,Technology,0
+OKTA,NASDAQ,Okta Inc.,Okta,Technology,0
+S,NYSE,SentinelOne Inc.,SentinelOne,Technology,0
+MSTR,NASDAQ,MicroStrategy Inc.,MicroStrategy|Strategy Inc,Technology,0
+COIN,NASDAQ,Coinbase Global,Coinbase,Financials,0
+HOOD,NASDAQ,Robinhood Markets,Robinhood,Financials,0
+SQ,NYSE,Block Inc.,Block Inc|Square,Technology,1
+PYPL,NASDAQ,PayPal Holdings,PayPal|Venmo,Financials,0
+V,NYSE,Visa Inc.,Visa,Financials,1
+MA,NYSE,Mastercard Inc.,Mastercard,Financials,0
+AXP,NYSE,American Express,American Express|Amex,Financials,0
+JPM,NYSE,JPMorgan Chase,JPMorgan|JP Morgan,Financials,0
+BAC,NYSE,Bank of America,Bank of America|BofA,Financials,0
+WFC,NYSE,Wells Fargo,Wells Fargo,Financials,0
+C,NYSE,Citigroup Inc.,Citigroup|Citi,Financials,1
+GS,NYSE,Goldman Sachs Group,Goldman Sachs|Goldman,Financials,0
+MS,NYSE,Morgan Stanley,Morgan Stanley,Financials,0
+SCHW,NYSE,Charles Schwab,Charles Schwab|Schwab,Financials,0
+BLK,NYSE,BlackRock Inc.,BlackRock,Financials,0
+BX,NYSE,Blackstone Inc.,Blackstone,Financials,0
+KKR,NYSE,KKR & Co.,KKR,Financials,0
+APO,NYSE,Apollo Global Management,Apollo Global,Financials,0
+BRK.B,NYSE,Berkshire Hathaway,Berkshire Hathaway|Berkshire,Financials,0
+ALLY,NYSE,Ally Financial,Ally Financial,Financials,0
+SOFI,NASDAQ,SoFi Technologies,SoFi,Financials,0
+AFRM,NASDAQ,Affirm Holdings,Affirm,Financials,1
+UPST,NASDAQ,Upstart Holdings,Upstart,Financials,1
+NU,NYSE,Nu Holdings,Nubank|Nu Holdings,Financials,0
+WMT,NYSE,Walmart Inc.,Walmart,Consumer Staples,0
+COST,NASDAQ,Costco Wholesale,Costco,Consumer Staples,0
+TGT,NYSE,Target Corporation,Target,Consumer Staples,1
+DG,NYSE,Dollar General,Dollar General,Consumer Staples,0
+DLTR,NASDAQ,Dollar Tree,Dollar Tree,Consumer Staples,0
+KR,NYSE,Kroger Co.,Kroger,Consumer Staples,0
+PG,NYSE,Procter & Gamble,Procter & Gamble|P&G,Consumer Staples,0
+KO,NYSE,Coca-Cola Company,Coca-Cola|Coke,Consumer Staples,1
+PEP,NASDAQ,PepsiCo Inc.,PepsiCo|Pepsi,Consumer Staples,0
+MDLZ,NASDAQ,Mondelez International,Mondelez,Consumer Staples,0
+KHC,NASDAQ,Kraft Heinz,Kraft Heinz,Consumer Staples,0
+GIS,NYSE,General Mills,General Mills,Consumer Staples,0
+TSN,NYSE,Tyson Foods,Tyson Foods,Consumer Staples,1
+HSY,NYSE,Hershey Company,Hershey,Consumer Staples,0
+CL,NYSE,Colgate-Palmolive,Colgate,Consumer Staples,0
+EL,NYSE,Estee Lauder,Estee Lauder,Consumer Staples,0
+PM,NYSE,Philip Morris International,Philip Morris,Consumer Staples,0
+MO,NYSE,Altria Group,Altria,Consumer Staples,0
+STZ,NYSE,Constellation Brands,Constellation Brands,Consumer Staples,0
+HD,NYSE,Home Depot,Home Depot,Consumer Discretionary,0
+LOW,NYSE,Lowe's Companies,Lowe's|Lowes,Consumer Discretionary,0
+MCD,NYSE,McDonald's Corporation,McDonald's|McDonalds,Consumer Discretionary,0
+SBUX,NASDAQ,Starbucks Corporation,Starbucks,Consumer Discretionary,0
+CMG,NYSE,Chipotle Mexican Grill,Chipotle,Consumer Discretionary,0
+YUM,NYSE,Yum! Brands,Yum Brands|KFC|Taco Bell|Pizza Hut,Consumer Discretionary,0
+DPZ,NASDAQ,Domino's Pizza,Domino's|Dominos,Consumer Discretionary,0
+WEN,NASDAQ,Wendy's Company,Wendy's|Wendys,Consumer Discretionary,0
+NKE,NYSE,Nike Inc.,Nike,Consumer Discretionary,0
+LULU,NASDAQ,Lululemon Athletica,Lululemon,Consumer Discretionary,0
+GAP,NYSE,Gap Inc.,Gap Inc,Consumer Discretionary,1
+TPR,NYSE,Tapestry Inc.,Tapestry|Coach brand,Consumer Discretionary,1
+RL,NYSE,Ralph Lauren,Ralph Lauren,Consumer Discretionary,0
+DECK,NYSE,Deckers Outdoor,Deckers|Hoka|UGG,Consumer Discretionary,0
+ONON,NYSE,On Holding,On Holding|On Running,Consumer Discretionary,1
+CROX,NASDAQ,Crocs Inc.,Crocs,Consumer Discretionary,0
+TJX,NYSE,TJX Companies,TJX|TJ Maxx|Marshalls,Consumer Discretionary,0
+ROST,NASDAQ,Ross Stores,Ross Stores,Consumer Discretionary,0
+BBY,NYSE,Best Buy,Best Buy,Consumer Discretionary,0
+ANF,NYSE,Abercrombie & Fitch,Abercrombie,Consumer Discretionary,0
+EBAY,NASDAQ,eBay Inc.,eBay,Consumer Discretionary,0
+ETSY,NASDAQ,Etsy Inc.,Etsy,Consumer Discretionary,0
+W,NYSE,Wayfair Inc.,Wayfair,Consumer Discretionary,0
+CHWY,NYSE,Chewy Inc.,Chewy,Consumer Discretionary,1
+SHOP,TSX,Shopify Inc.,Shopify,Technology,0
+F,NYSE,Ford Motor Company,Ford Motor|Ford,Consumer Discretionary,1
+GM,NYSE,General Motors,General Motors,Consumer Discretionary,0
+STLA,NYSE,Stellantis N.V.,Stellantis|Jeep|Chrysler,Consumer Discretionary,0
+RIVN,NASDAQ,Rivian Automotive,Rivian,Consumer Discretionary,0
+LCID,NASDAQ,Lucid Group,Lucid Motors|Lucid Group,Consumer Discretionary,1
+NIO,NYSE,NIO Inc.,NIO,Consumer Discretionary,0
+XPEV,NYSE,XPeng Inc.,XPeng,Consumer Discretionary,0
+LI,NASDAQ,Li Auto,Li Auto,Consumer Discretionary,0
+TM,NYSE,Toyota Motor,Toyota,Consumer Discretionary,0
+HMC,NYSE,Honda Motor,Honda,Consumer Discretionary,0
+RACE,NYSE,Ferrari N.V.,Ferrari,Consumer Discretionary,0
+HOG,NYSE,Harley-Davidson,Harley-Davidson|Harley,Consumer Discretionary,0
+ABNB,NASDAQ,Airbnb Inc.,Airbnb,Consumer Discretionary,0
+BKNG,NASDAQ,Booking Holdings,Booking Holdings|Booking.com|Priceline,Consumer Discretionary,0
+EXPE,NASDAQ,Expedia Group,Expedia,Consumer Discretionary,0
+UBER,NYSE,Uber Technologies,Uber,Technology,0
+LYFT,NASDAQ,Lyft Inc.,Lyft,Technology,0
+DASH,NASDAQ,DoorDash Inc.,DoorDash,Consumer Discretionary,0
+CART,NASDAQ,Instacart,Instacart|Maplebear,Consumer Discretionary,0
+DAL,NYSE,Delta Air Lines,Delta Air Lines|Delta Airlines,Industrials,1
+UAL,NASDAQ,United Airlines,United Airlines,Industrials,0
+AAL,NASDAQ,American Airlines,American Airlines,Industrials,0
+LUV,NYSE,Southwest Airlines,Southwest Airlines,Industrials,0
+ALK,NYSE,Alaska Air Group,Alaska Air|Alaska Airlines,Industrials,0
+AC,TSX,Air Canada,Air Canada,Industrials,0
+CCL,NYSE,Carnival Corporation,Carnival Corp|Carnival Cruise,Consumer Discretionary,1
+RCL,NYSE,Royal Caribbean,Royal Caribbean,Consumer Discretionary,0
+NCLH,NYSE,Norwegian Cruise Line,Norwegian Cruise,Consumer Discretionary,0
+MAR,NASDAQ,Marriott International,Marriott,Consumer Discretionary,0
+HLT,NYSE,Hilton Worldwide,Hilton,Consumer Discretionary,0
+LVS,NYSE,Las Vegas Sands,Las Vegas Sands,Consumer Discretionary,0
+WYNN,NASDAQ,Wynn Resorts,Wynn Resorts,Consumer Discretionary,0
+MGM,NYSE,MGM Resorts,MGM Resorts,Consumer Discretionary,0
+DKNG,NASDAQ,DraftKings Inc.,DraftKings,Consumer Discretionary,0
+FLUT,NYSE,Flutter Entertainment,Flutter Entertainment|FanDuel,Consumer Discretionary,0
+DIS,NYSE,Walt Disney Company,Disney,Communication Services,0
+NFLX,NASDAQ,Netflix Inc.,Netflix,Communication Services,0
+WBD,NASDAQ,Warner Bros. Discovery,Warner Bros|Warner Brothers|HBO,Communication Services,0
+PARA,NASDAQ,Paramount Global,Paramount Global|Paramount Skydance,Communication Services,0
+CMCSA,NASDAQ,Comcast Corporation,Comcast|NBCUniversal,Communication Services,0
+T,NYSE,AT&T Inc.,AT&T,Communication Services,0
+VZ,NYSE,Verizon Communications,Verizon,Communication Services,0
+TMUS,NASDAQ,T-Mobile US,T-Mobile,Communication Services,0
+SPOT,NYSE,Spotify Technology,Spotify,Communication Services,0
+RBLX,NYSE,Roblox Corporation,Roblox,Communication Services,0
+EA,NASDAQ,Electronic Arts,Electronic Arts,Communication Services,0
+TTWO,NASDAQ,Take-Two Interactive,Take-Two|Rockstar Games,Communication Services,0
+U,NYSE,Unity Software,Unity Software,Technology,1
+PINS,NYSE,Pinterest Inc.,Pinterest,Communication Services,0
+SNAP,NYSE,Snap Inc.,Snap Inc|Snapchat,Communication Services,1
+RDDT,NYSE,Reddit Inc.,Reddit,Communication Services,0
+MTCH,NASDAQ,Match Group,Match Group|Tinder|Hinge,Communication Services,1
+DUOL,NASDAQ,Duolingo Inc.,Duolingo,Technology,0
+ZM,NASDAQ,Zoom Communications,Zoom,Technology,1
+DOCU,NASDAQ,DocuSign Inc.,DocuSign,Technology,0
+TEAM,NASDAQ,Atlassian Corporation,Atlassian|Jira,Technology,0
+WDAY,NASDAQ,Workday Inc.,Workday,Technology,0
+HUBS,NYSE,HubSpot Inc.,HubSpot,Technology,0
+SHOP-US,NYSE,Shopify US line,Shopify NYSE,Technology,0
+INTU,NASDAQ,Intuit Inc.,Intuit|TurboTax|QuickBooks,Technology,0
+ADP,NASDAQ,Automatic Data Processing,ADP,Technology,0
+UNH,NYSE,UnitedHealth Group,UnitedHealth,Healthcare,0
+CVS,NYSE,CVS Health,CVS,Healthcare,0
+CI,NYSE,Cigna Group,Cigna,Healthcare,0
+HUM,NYSE,Humana Inc.,Humana,Healthcare,0
+ELV,NYSE,Elevance Health,Elevance,Healthcare,0
+LLY,NYSE,Eli Lilly and Company,Eli Lilly|Lilly|Zepbound|Mounjaro,Healthcare,0
+NVO,NYSE,Novo Nordisk,Novo Nordisk|Ozempic|Wegovy,Healthcare,0
+PFE,NYSE,Pfizer Inc.,Pfizer,Healthcare,0
+MRK,NYSE,Merck & Co.,Merck|Keytruda,Healthcare,0
+JNJ,NYSE,Johnson & Johnson,Johnson & Johnson|J&J,Healthcare,0
+ABBV,NYSE,AbbVie Inc.,AbbVie|Humira,Healthcare,0
+BMY,NYSE,Bristol-Myers Squibb,Bristol-Myers|Bristol Myers,Healthcare,0
+AMGN,NASDAQ,Amgen Inc.,Amgen,Healthcare,0
+GILD,NASDAQ,Gilead Sciences,Gilead,Healthcare,0
+BIIB,NASDAQ,Biogen Inc.,Biogen,Healthcare,0
+REGN,NASDAQ,Regeneron Pharmaceuticals,Regeneron,Healthcare,0
+VRTX,NASDAQ,Vertex Pharmaceuticals,Vertex Pharmaceuticals|Vertex Pharma,Healthcare,0
+MRNA,NASDAQ,Moderna Inc.,Moderna,Healthcare,0
+NVAX,NASDAQ,Novavax Inc.,Novavax,Healthcare,0
+HIMS,NYSE,Hims & Hers Health,Hims & Hers|Hims,Healthcare,0
+VKTX,NASDAQ,Viking Therapeutics,Viking Therapeutics,Healthcare,0
+ISRG,NASDAQ,Intuitive Surgical,Intuitive Surgical|da Vinci robot,Healthcare,0
+MDT,NYSE,Medtronic plc,Medtronic,Healthcare,0
+ABT,NYSE,Abbott Laboratories,Abbott Labs|Abbott,Healthcare,0
+DXCM,NASDAQ,DexCom Inc.,DexCom,Healthcare,0
+TMO,NYSE,Thermo Fisher Scientific,Thermo Fisher,Healthcare,0
+XOM,NYSE,Exxon Mobil,Exxon Mobil|Exxon|ExxonMobil,Energy,0
+CVX,NYSE,Chevron Corporation,Chevron,Energy,0
+COP,NYSE,ConocoPhillips,ConocoPhillips|Conoco,Energy,0
+OXY,NYSE,Occidental Petroleum,Occidental Petroleum|Occidental,Energy,0
+SLB,NYSE,Schlumberger,Schlumberger|SLB,Energy,0
+HAL,NYSE,Halliburton Company,Halliburton,Energy,0
+BKR,NASDAQ,Baker Hughes,Baker Hughes,Energy,0
+DVN,NYSE,Devon Energy,Devon Energy,Energy,0
+EOG,NYSE,EOG Resources,EOG Resources,Energy,0
+FANG,NASDAQ,Diamondback Energy,Diamondback Energy,Energy,0
+SHEL,NYSE,Shell plc,Shell plc,Energy,1
+BP,NYSE,BP p.l.c.,BP plc,Energy,1
+SU,TSX,Suncor Energy,Suncor,Energy,0
+CNQ,TSX,Canadian Natural Resources,Canadian Natural Resources|Canadian Natural,Energy,0
+ENB,TSX,Enbridge Inc.,Enbridge,Energy,0
+TRP,TSX,TC Energy,TC Energy|TransCanada,Energy,0
+CVE,TSX,Cenovus Energy,Cenovus,Energy,0
+IMO,TSX,Imperial Oil,Imperial Oil,Energy,0
+TOU,TSX,Tourmaline Oil,Tourmaline Oil|Tourmaline,Energy,0
+CCO,TSX,Cameco Corporation,Cameco,Energy,0
+CCJ,NYSE,Cameco US line,Cameco NYSE,Energy,0
+UEC,NYSE,Uranium Energy Corp,Uranium Energy Corp,Energy,0
+OKLO,NYSE,Oklo Inc.,Oklo,Energy,0
+SMR,NYSE,NuScale Power,NuScale,Energy,0
+CEG,NASDAQ,Constellation Energy,Constellation Energy,Utilities,0
+VST,NYSE,Vistra Corp,Vistra,Utilities,0
+NEE,NYSE,NextEra Energy,NextEra,Utilities,0
+DUK,NYSE,Duke Energy,Duke Energy,Utilities,0
+SO,NYSE,Southern Company,Southern Company,Utilities,0
+FSLR,NASDAQ,First Solar,First Solar,Energy,0
+ENPH,NASDAQ,Enphase Energy,Enphase,Energy,0
+RUN,NASDAQ,Sunrun Inc.,Sunrun,Energy,0
+PLUG,NASDAQ,Plug Power,Plug Power,Energy,0
+BA,NYSE,Boeing Company,Boeing,Industrials,0
+AIR,NYSE,AAR Corp,AAR Corp,Industrials,1
+LMT,NYSE,Lockheed Martin,Lockheed Martin|Lockheed,Industrials,0
+RTX,NYSE,RTX Corporation,RTX Corp|Raytheon,Industrials,0
+NOC,NYSE,Northrop Grumman,Northrop Grumman|Northrop,Industrials,0
+GD,NYSE,General Dynamics,General Dynamics,Industrials,0
+LHX,NYSE,L3Harris Technologies,L3Harris,Industrials,0
+HII,NYSE,Huntington Ingalls,Huntington Ingalls,Industrials,0
+AXON,NASDAQ,Axon Enterprise,Axon Enterprise|Taser,Industrials,0
+RKLB,NASDAQ,Rocket Lab,Rocket Lab,Industrials,0
+LUNR,NASDAQ,Intuitive Machines,Intuitive Machines,Industrials,0
+ASTS,NASDAQ,AST SpaceMobile,AST SpaceMobile,Technology,0
+JOBY,NYSE,Joby Aviation,Joby Aviation|Joby,Industrials,0
+ACHR,NYSE,Archer Aviation,Archer Aviation,Industrials,1
+CAT,NYSE,Caterpillar Inc.,Caterpillar,Industrials,1
+DE,NYSE,Deere & Company,John Deere|Deere,Industrials,0
+HON,NASDAQ,Honeywell International,Honeywell,Industrials,0
+GE,NYSE,GE Aerospace,GE Aerospace|General Electric,Industrials,0
+GEV,NYSE,GE Vernova,GE Vernova,Industrials,0
+MMM,NYSE,3M Company,3M,Industrials,0
+EMR,NYSE,Emerson Electric,Emerson Electric,Industrials,0
+ETN,NYSE,Eaton Corporation,Eaton Corp|Eaton,Industrials,1
+PH,NYSE,Parker-Hannifin,Parker-Hannifin|Parker Hannifin,Industrials,0
+URI,NYSE,United Rentals,United Rentals,Industrials,0
+UPS,NYSE,United Parcel Service,UPS,Industrials,0
+FDX,NYSE,FedEx Corporation,FedEx,Industrials,0
+UNP,NYSE,Union Pacific,Union Pacific,Industrials,0
+CSX,NASDAQ,CSX Corporation,CSX,Industrials,0
+NSC,NYSE,Norfolk Southern,Norfolk Southern,Industrials,0
+CNR,TSX,Canadian National Railway,Canadian National Railway|CN Rail,Industrials,0
+CP,TSX,Canadian Pacific Kansas City,Canadian Pacific|CPKC,Industrials,0
+LIN,NASDAQ,Linde plc,Linde,Materials,0
+APD,NYSE,Air Products and Chemicals,Air Products,Materials,0
+FCX,NYSE,Freeport-McMoRan,Freeport-McMoRan|Freeport,Materials,0
+NEM,NYSE,Newmont Corporation,Newmont,Materials,0
+ABX,TSX,Barrick Mining,Barrick Gold|Barrick,Materials,0
+AEM,TSX,Agnico Eagle Mines,Agnico Eagle,Materials,0
+WPM,TSX,Wheaton Precious Metals,Wheaton Precious,Materials,0
+FNV,TSX,Franco-Nevada,Franco-Nevada,Materials,0
+K,TSX,Kinross Gold,Kinross,Materials,1
+TECK,NYSE,Teck Resources,Teck Resources|Teck,Materials,0
+NTR,TSX,Nutrien Ltd.,Nutrien,Materials,0
+MOS,NYSE,Mosaic Company,Mosaic Co,Materials,1
+ALB,NYSE,Albemarle Corporation,Albemarle,Materials,0
+LAC,NYSE,Lithium Americas,Lithium Americas,Materials,0
+MP,NYSE,MP Materials,MP Materials,Materials,0
+X,NYSE,United States Steel,US Steel|U.S. Steel,Materials,0
+NUE,NYSE,Nucor Corporation,Nucor,Materials,0
+CLF,NYSE,Cleveland-Cliffs,Cleveland-Cliffs,Materials,0
+AA,NYSE,Alcoa Corporation,Alcoa,Materials,0
+RY,TSX,Royal Bank of Canada,Royal Bank of Canada|RBC,Financials,0
+TD,TSX,Toronto-Dominion Bank,TD Bank|Toronto-Dominion,Financials,0
+BNS,TSX,Bank of Nova Scotia,Scotiabank|Bank of Nova Scotia,Financials,0
+BMO,TSX,Bank of Montreal,Bank of Montreal|BMO,Financials,0
+CM,TSX,CIBC,CIBC|Canadian Imperial Bank,Financials,0
+NA,TSX,National Bank of Canada,National Bank of Canada,Financials,1
+MFC,TSX,Manulife Financial,Manulife,Financials,0
+SLF,TSX,Sun Life Financial,Sun Life,Financials,0
+BN,TSX,Brookfield Corporation,Brookfield Corp|Brookfield,Financials,0
+GWO,TSX,Great-West Lifeco,Great-West Lifeco,Financials,0
+IFC,TSX,Intact Financial,Intact Financial,Financials,0
+CSU,TSX,Constellation Software,Constellation Software,Technology,0
+OTEX,TSX,Open Text Corporation,OpenText|Open Text,Technology,0
+KXS,TSX,Kinaxis Inc.,Kinaxis,Technology,0
+LSPD,TSX,Lightspeed Commerce,Lightspeed Commerce|Lightspeed,Technology,0
+DOL,TSX,Dollarama Inc.,Dollarama,Consumer Staples,0
+ATD,TSX,Alimentation Couche-Tard,Couche-Tard|Circle K,Consumer Staples,0
+L,TSX,Loblaw Companies,Loblaw,Consumer Staples,1
+MRU,TSX,Metro Inc.,Metro Inc,Consumer Staples,1
+QSR,TSX,Restaurant Brands International,Restaurant Brands|Tim Hortons|Burger King|Popeyes,Consumer Discretionary,0
+MG,TSX,Magna International,Magna International|Magna,Consumer Discretionary,1
+BCE,TSX,BCE Inc.,BCE|Bell Canada,Communication Services,0
+RCI.B,TSX,Rogers Communications,Rogers Communications,Communication Services,0
+T-CA,TSX,TELUS Corporation,Telus,Communication Services,0
+CVO,TSX,Coveo Solutions,Coveo,Technology,0
+WEED,TSX,Canopy Growth,Canopy Growth,Healthcare,0
+ACB,TSX,Aurora Cannabis,Aurora Cannabis,Healthcare,0
+TLRY,NASDAQ,Tilray Brands,Tilray,Healthcare,0
+GME,NYSE,GameStop Corp.,GameStop,Consumer Discretionary,0
+AMC,NYSE,AMC Entertainment,AMC Entertainment|AMC theaters,Communication Services,1
+BBAI,NYSE,BigBear.ai,BigBear.ai|BigBear,Technology,0
+SOUN,NASDAQ,SoundHound AI,SoundHound,Technology,0
+AI,NYSE,C3.ai Inc.,C3.ai|C3 ai,Technology,0
+IONQ,NYSE,IonQ Inc.,IonQ,Technology,0
+RGTI,NASDAQ,Rigetti Computing,Rigetti,Technology,0
+QBTS,NYSE,D-Wave Quantum,D-Wave,Technology,0
+MARA,NASDAQ,MARA Holdings,Marathon Digital|MARA Holdings,Technology,0
+RIOT,NASDAQ,Riot Platforms,Riot Platforms|Riot Blockchain,Technology,0
+CLSK,NASDAQ,CleanSpark Inc.,CleanSpark,Technology,0
+HUT,TSX,Hut 8 Corp,Hut 8,Technology,0
+GLXY,TSX,Galaxy Digital,Galaxy Digital,Financials,0
+PLD,NYSE,Prologis Inc.,Prologis,Real Estate,0
+AMT,NYSE,American Tower,American Tower,Real Estate,0
+EQIX,NASDAQ,Equinix Inc.,Equinix,Real Estate,0
+DLR,NYSE,Digital Realty,Digital Realty,Real Estate,0
+O,NYSE,Realty Income,Realty Income,Real Estate,0
+SPG,NYSE,Simon Property Group,Simon Property,Real Estate,0
+Z,NASDAQ,Zillow Group,Zillow,Real Estate,0
+OPEN,NASDAQ,Opendoor Technologies,Opendoor,Real Estate,0
+LEN,NYSE,Lennar Corporation,Lennar,Consumer Discretionary,0
+DHI,NYSE,D.R. Horton,DR Horton|D.R. Horton,Consumer Discretionary,0
+PHM,NYSE,PulteGroup Inc.,PulteGroup|Pulte,Consumer Discretionary,0
+TOL,NYSE,Toll Brothers,Toll Brothers,Consumer Discretionary,0

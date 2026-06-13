@@ -1,0 +1,374 @@
+[
+ {
+  "m": 12,
+  "s": "CNBC \u2014 Markets",
+  "t": "Nvidia shares jump 4% premarket after hyperscaler capex commentary tops estimates"
+ },
+ {
+  "m": 25,
+  "s": "Walter-style wire",
+  "t": "$AMD UNVEILS NEXT-GEN MI400 AI ACCELERATOR, CLAIMS 1.8X INFERENCE GAIN OVER RIVAL GPU"
+ },
+ {
+  "m": 31,
+  "s": "SEC EDGAR",
+  "t": "8-K material event: Super Micro Computer Inc",
+  "k": "filing"
+ },
+ {
+  "m": 44,
+  "s": "GlobeNewswire \u2014 Public Companies",
+  "t": "Cameco (TSX: CCO) and Brookfield announce uranium supply agreement expansion with US utilities"
+ },
+ {
+  "m": 52,
+  "s": "CNBC \u2014 Top News",
+  "t": "Eli Lilly's oral GLP-1 pill shows 14% weight loss in Phase 3 trial, shares surge"
+ },
+ {
+  "m": 58,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Fed officials signal patience on rate cuts as inflation data runs hot"
+ },
+ {
+  "m": 75,
+  "s": "MarketWatch \u2014 Market Pulse",
+  "t": "Target cuts full-year guidance as consumer spending weakens, shares slide 8%"
+ },
+ {
+  "m": 90,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Palantir secures $480 million defense contract for AI battlefield analytics platform"
+ },
+ {
+  "m": 110,
+  "s": "SEC EDGAR",
+  "t": "Form 4 insider filing: Occidental Petroleum Corp",
+  "k": "filing"
+ },
+ {
+  "m": 130,
+  "s": "CNBC \u2014 Markets",
+  "t": "Boeing shares fall after FAA opens new probe into 787 production records"
+ },
+ {
+  "m": 150,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Shopify (TSX: SHOP) launches AI checkout agent, analysts raise price targets"
+ },
+ {
+  "m": 170,
+  "s": "Google News \u2014 TSX",
+  "t": "Royal Bank of Canada beats estimates, lifts dividend after record capital markets quarter"
+ },
+ {
+  "m": 195,
+  "s": "MarketWatch \u2014 Top Stories",
+  "t": "Bitcoin tops $120,000 as ETF inflows accelerate; Coinbase and MicroStrategy rally"
+ },
+ {
+  "m": 220,
+  "s": "CNBC \u2014 Markets",
+  "t": "Microsoft to spend $95 billion on AI data centers this fiscal year, CFO says"
+ },
+ {
+  "m": 260,
+  "s": "GlobeNewswire \u2014 Public Companies",
+  "t": "Couche-Tard (TSX: ATD) walks away from takeover talks, shares jump on buyback plan"
+ },
+ {
+  "m": 290,
+  "s": "Walter-style wire",
+  "t": "*OPEC+ AGREES TO EXTEND OUTPUT CUTS THROUGH Q4 \u2014 CRUDE JUMPS 3%, $XOM $CVX HIGHER"
+ },
+ {
+  "m": 330,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Apple supplier shipments point to soft iPhone demand, analysts trim estimates"
+ },
+ {
+  "m": 360,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Rocket Lab wins NASA contract for Mars sample return support missions"
+ },
+ {
+  "m": 400,
+  "s": "CNBC \u2014 Top News",
+  "t": "CrowdStrike and Palo Alto Networks gain as ransomware attack on major retailer spreads"
+ },
+ {
+  "m": 430,
+  "s": "SEC EDGAR",
+  "t": "8-K material event: Tesla Inc",
+  "k": "filing"
+ },
+ {
+  "m": 470,
+  "s": "MarketWatch \u2014 Market Pulse",
+  "t": "Tesla recalls 340,000 vehicles over autonomous driving software flaw"
+ },
+ {
+  "m": 700,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Goldman Sachs upgrades Micron to Buy, sees memory supercycle extending into 2027"
+ },
+ {
+  "m": 800,
+  "s": "Financial Post \u2014 Markets",
+  "t": "Enbridge announces $2.8 billion pipeline expansion as LNG exports ramp"
+ },
+ {
+  "m": 920,
+  "s": "CNBC \u2014 Markets",
+  "t": "Netflix beats on subscribers but guidance disappoints; shares fall after hours"
+ },
+ {
+  "m": 1100,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Gold hits record high above $3,400 as central banks keep buying; Barrick and Agnico Eagle rally"
+ },
+ {
+  "m": 1250,
+  "s": "PR Newswire \u2014 All News",
+  "t": "IonQ announces quantum networking milestone, partnership with US national lab"
+ },
+ {
+  "m": 1300,
+  "s": "SEC EDGAR",
+  "t": "Form 4 insider filing: GameStop Corp",
+  "k": "filing"
+ },
+ {
+  "m": 1380,
+  "s": "MarketWatch \u2014 Top Stories",
+  "t": "Ford recalls 200,000 trucks over braking issue; shares dip"
+ },
+ {
+  "m": 1420,
+  "s": "CNBC \u2014 Top News",
+  "t": "DOJ antitrust probe into Visa debit practices widens, sources say"
+ },
+ {
+  "m": 1450,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Homebuilders Lennar and D.R. Horton slide as mortgage rates climb back above 7%"
+ },
+ {
+  "m": 2100,
+  "s": "GlobeNewswire \u2014 Public Companies",
+  "t": "Constellation Software (TSX: CSU) acquires three vertical software businesses"
+ },
+ {
+  "m": 2400,
+  "s": "CNBC \u2014 Markets",
+  "t": "Amazon announces 14,000 corporate layoffs in efficiency push, shares rise"
+ },
+ {
+  "m": 2900,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Moderna plunges 18% after FDA requests additional data on next-gen vaccine"
+ },
+ {
+  "m": 3300,
+  "s": "Walter-style wire",
+  "t": "$NVO NOVO NORDISK CUTS GUIDANCE, CITES COMPOUNDED SEMAGLUTIDE COMPETITION \u2014 SHARES SINK 12%"
+ },
+ {
+  "m": 3700,
+  "s": "MarketWatch \u2014 Market Pulse",
+  "t": "Short squeeze watch: heavily shorted EV names Rivian and Lucid spike on volume"
+ },
+ {
+  "m": 4000,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Oklo and Vistra sign data center power agreements as AI electricity demand soars"
+ },
+ {
+  "m": 4350,
+  "s": "CNBC \u2014 Top News",
+  "t": "Tariffs on Chinese EVs and batteries to double, trade office confirms"
+ },
+ {
+  "m": 4800,
+  "s": "Financial Post \u2014 Markets",
+  "t": "Air Canada beats earnings estimates on transatlantic demand, raises outlook"
+ },
+ {
+  "m": 5300,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Disney explores strategic options for linear TV networks, sources say"
+ },
+ {
+  "m": 5800,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Robinhood launches futures trading, stock hits all-time high"
+ },
+ {
+  "m": 6300,
+  "s": "SEC EDGAR",
+  "t": "8-K material event: Intel Corp",
+  "k": "filing"
+ },
+ {
+  "m": 6800,
+  "s": "CNBC \u2014 Markets",
+  "t": "Intel wins $4 billion foundry commitment; chips act funding finalized"
+ },
+ {
+  "m": 7400,
+  "s": "MarketWatch \u2014 Top Stories",
+  "t": "Regional banks slump as credit card delinquencies hit post-2010 high"
+ },
+ {
+  "m": 8200,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Joby Aviation completes first piloted air taxi flight in New York City"
+ },
+ {
+  "m": 9000,
+  "s": "GlobeNewswire \u2014 Public Companies",
+  "t": "Lightspeed Commerce (TSX: LSPD) explores sale after activist pressure, shares surge 15%"
+ },
+ {
+  "m": 9900,
+  "s": "CNBC \u2014 Top News",
+  "t": "Starbucks turnaround plan: 500 store closures and menu cuts, shares gain"
+ },
+ {
+  "m": 11000,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Uranium spot price tops $110 as utilities scramble; Cameco hits record"
+ },
+ {
+  "m": 12500,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Meta beats on revenue but AI capex guidance spooks investors"
+ },
+ {
+  "m": 14000,
+  "s": "MarketWatch \u2014 Market Pulse",
+  "t": "Pfizer wins FDA approval for oral obesity drug, challenging Lilly and Novo"
+ },
+ {
+  "m": 16000,
+  "s": "Walter-style wire",
+  "t": "*MICROSOFT, OPENAI SIGN REVISED PARTNERSHIP \u2014 $MSFT GETS 27% STAKE, REMOVES EXCLUSIVITY"
+ },
+ {
+  "m": 18500,
+  "s": "CNBC \u2014 Markets",
+  "t": "Nuclear renaissance: NuScale and Oklo surge on new reactor approvals"
+ },
+ {
+  "m": 21000,
+  "s": "PR Newswire \u2014 All News",
+  "t": "MP Materials lands Pentagon rare earth supply deal worth $400 million"
+ },
+ {
+  "m": 24000,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Lululemon misses on comparable sales, cuts guidance; shares plunge 14%"
+ },
+ {
+  "m": 27000,
+  "s": "Financial Post \u2014 Markets",
+  "t": "Suncor and Cenovus rally as oil sands output hits record on pipeline capacity"
+ },
+ {
+  "m": 30000,
+  "s": "CNBC \u2014 Top News",
+  "t": "Salesforce announces $10 billion buyback and dividend hike after activist stake"
+ },
+ {
+  "m": 33000,
+  "s": "Google News \u2014 Stock Market",
+  "t": "Quantum stocks IonQ, Rigetti and D-Wave whipsaw after big tech breakthrough claims"
+ },
+ {
+  "m": 36000,
+  "s": "MarketWatch \u2014 Top Stories",
+  "t": "Boeing machinists ratify contract, ending seven-week strike; production restarts"
+ },
+ {
+  "m": 39000,
+  "s": "SEC EDGAR",
+  "t": "Form 4 insider filing: JPMorgan Chase & Co",
+  "k": "filing"
+ },
+ {
+  "m": 41000,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Apple unveils foldable iPhone prototype to suppliers, Nikkei reports; shares gain"
+ },
+ {
+  "m": 70000,
+  "s": "CNBC \u2014 Markets",
+  "t": "Nvidia clears $5 trillion market cap as AI infrastructure spending accelerates"
+ },
+ {
+  "m": 95000,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Bank of Canada cuts rates as inflation cools; bank stocks rally"
+ },
+ {
+  "m": 120000,
+  "s": "MarketWatch \u2014 Top Stories",
+  "t": "Eli Lilly raises guidance again as Zepbound supply constraints ease"
+ },
+ {
+  "m": 140000,
+  "s": "SEC EDGAR",
+  "t": "8-K material event: Boeing Co",
+  "k": "filing"
+ },
+ {
+  "m": 160000,
+  "s": "Google News \u2014 Stock Market",
+  "t": "US Steel deal clears final review; shares jump on closing timeline"
+ },
+ {
+  "m": 190000,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Cameco signs long-term uranium supply contracts with European utilities"
+ },
+ {
+  "m": 220000,
+  "s": "CNBC \u2014 Top News",
+  "t": "Tesla robotaxi launch expands to three more cities despite regulator concerns"
+ },
+ {
+  "m": 250000,
+  "s": "Financial Post \u2014 Markets",
+  "t": "Shopify (TSX: SHOP) beats on revenue, announces first-ever buyback"
+ },
+ {
+  "m": 290000,
+  "s": "Yahoo Finance \u2014 News",
+  "t": "Gold miners Newmont and Barrick post record cash flow on bullion rally"
+ },
+ {
+  "m": 330000,
+  "s": "MarketWatch \u2014 Market Pulse",
+  "t": "Meme stock revival: GameStop and AMC spike as retail volume surges"
+ },
+ {
+  "m": 380000,
+  "s": "CNBC \u2014 Markets",
+  "t": "Microsoft Azure growth tops 40% as AI workloads ramp; shares hit record"
+ },
+ {
+  "m": 420000,
+  "s": "Google News \u2014 TSX",
+  "t": "Couche-Tard expands US footprint with 270-store acquisition"
+ },
+ {
+  "m": 460000,
+  "s": "PR Newswire \u2014 All News",
+  "t": "Pfizer announces $5 billion restructuring and layoffs amid patent cliff"
+ },
+ {
+  "m": 500000,
+  "s": "Walter-style wire",
+  "t": "*FED CUTS RATES 25BP, SIGNALS TWO MORE CUTS THIS YEAR \u2014 STOCKS RALLY"
+ }
+]
