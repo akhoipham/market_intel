@@ -7,10 +7,11 @@
     {"name": "MarketWatch — Top Stories", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories"},
     {"name": "MarketWatch — Market Pulse", "url": "https://feeds.content.dowjones.io/public/rss/mw_marketpulse"},
     {"name": "Yahoo Finance — News", "url": "https://finance.yahoo.com/news/rssindex"},
+    {"name": "Yahoo Finance — Top Stories", "url": "https://finance.yahoo.com/rss/topfinstories"},
     {"name": "Seeking Alpha — Market News", "url": "https://seekingalpha.com/market_currents.xml"},
     {"name": "Financial Post — Markets", "url": "https://financialpost.com/category/investing/market-moves/feed"},
     {"name": "Google News — Stock Market", "url": "https://news.google.com/rss/search?q=stock%20market%20when:1d&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News — TSX", "url": "https://news.google.com/rss/search?q=TSX%20stock%20when:1d&hl=en-CA&gl=CA&ceid=CA:en"}
+    {"name": "Google News — TSX", "url": "https://news.google.com/rss/search?q=TSX%20stock%20when:1d&hl=en-CA&gl=CA&ceid=CA:en"},
     {"name": "Reuters — Business", "url": "https://feeds.reuters.com/reuters/businessNews"},
     {"name": "Reuters — Technology", "url": "https://feeds.reuters.com/reuters/technologyNews"},
     {"name": "Business Wire — All News", "url": "https://www.businesswire.com/rss/home/?rss=G1"},
@@ -18,8 +19,6 @@
     {"name": "Reddit — r/stocks", "url": "https://www.reddit.com/r/stocks/.rss"},
     {"name": "Reddit — r/wallstreetbets", "url": "https://www.reddit.com/r/wallstreetbets/.rss"},
     {"name": "Reddit — r/SecurityAnalysis", "url": "https://www.reddit.com/r/SecurityAnalysis/.rss"},
-    {"name": "Globe and Mail — Markets", "url": "https://www.theglobeandmail.com/investing/markets/rss"},
-    {"name": "Yahoo Finance — Top Stories", "url": "https://finance.yahoo.com/rss/topfinstories"},
     {"name": "Investopedia — News", "url": "https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline"},
     {"name": "Barron's — Markets", "url": "https://www.barrons.com/xml/rss/3_7517.xml"}
   ],
