@@ -43,5 +43,5 @@ jobs:
           git add data/intel.db dashboard.html || true
           git add data/tickers_sec.json 2>/dev/null || true
           git commit -m "auto: refresh $(date -u +'%Y-%m-%d %H:%M UTC')" || echo "nothing to commit"
-          git pull --rebase
+          git pull --rebase --autostash
           git push
