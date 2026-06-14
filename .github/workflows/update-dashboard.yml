@@ -36,7 +36,7 @@ jobs:
       - name: Fetch feeds and build dashboard
         run: python run.py fetch build
 
-      - - name: Commit updated data and dashboard
+      - name: Commit updated data and dashboard
         run: |
           git config user.name "signal-desk-bot"
           git config user.email "actions@users.noreply.github.com"
