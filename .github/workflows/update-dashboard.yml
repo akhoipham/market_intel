@@ -36,10 +36,12 @@ jobs:
       - name: Fetch feeds and build dashboard
         run: python run.py fetch build
 
-      - name: Commit updated data and dashboard
+      - - name: Commit updated data and dashboard
         run: |
           git config user.name "signal-desk-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/intel.db data/tickers_sec.json dashboard.html || true
-          git diff --cached --quiet || git commit -m "auto: refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git add data/intel.db dashboard.html || true
+          git add data/tickers_sec.json 2>/dev/null || true
+          git commit -m "auto: refresh $(date -u +'%Y-%m-%d %H:%M UTC')" || echo "nothing to commit"
+          git pull --rebase
           git push
