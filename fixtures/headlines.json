@@ -370,5 +370,35 @@
   "m": 500000,
   "s": "Walter-style wire",
   "t": "*FED CUTS RATES 25BP, SIGNALS TWO MORE CUTS THIS YEAR \u2014 STOCKS RALLY"
+ },
+ {
+  "m": 40,
+  "s": "Seeking Alpha \u2014 News",
+  "t": "Is It Too Late To Buy Nvidia Stock After The AI Rally?"
+ },
+ {
+  "m": 85,
+  "s": "Motley Fool",
+  "t": "Better Buy: AMD vs. Intel In 2026"
+ },
+ {
+  "m": 130,
+  "s": "CNBC \u2014 Markets",
+  "t": "Israel strikes Hezbollah targets in Lebanon; oil prices spike, defense stocks rally"
+ },
+ {
+  "m": 210,
+  "s": "Reuters \u2014 Business",
+  "t": "China conducts military drills near Taiwan; TSMC and chip stocks slide"
+ },
+ {
+  "m": 320,
+  "s": "Walter-style wire",
+  "t": "*US SENATE PASSES $60 BILLION UKRAINE MILITARY AID PACKAGE \u2014 LOCKHEED, RTX HIGHER"
+ },
+ {
+  "m": 500,
+  "s": "CNBC \u2014 Top News",
+  "t": "Trump administration doubles tariffs on Chinese EVs and solar panels"
  }
 ]
