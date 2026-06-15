@@ -183,18 +183,20 @@ def is_commentary(text: str) -> bool:
     return (has_verb and has_market_subject) or (has_role and has_verb)
 
 
-def analyze(text: str) -> dict:
-    s = _raw_score(text)
+def analyze(text: str, source: str = "") -> dict:
+    opinion = is_opinion(text, source)
+    s = _blended_raw(text)
     commentary = is_commentary(text)
-    # When it's commentary, the sentiment doesn't attach to the named ticker.
-    eff = 0.0 if commentary else s
+    # Opinion pieces and market commentary don't attach sentiment to a ticker.
+    eff = 0.0 if (commentary or opinion) else s
     return {"score": round(eff, 3), "raw": round(s, 3),
-            "label": label(eff), "is_commentary": commentary}
+            "label": label(eff), "is_commentary": commentary,
+            "is_opinion": opinion}
 
 
-def score(text: str) -> float:
-    """Back-compatible: returns the effective (commentary-neutralized) score."""
-    return analyze(text)["score"]
+def score(text: str, source: str = "") -> float:
+    """Back-compatible: returns the effective score."""
+    return analyze(text, source)["score"]
 
 
 def label(s: float) -> str:
@@ -203,3 +205,46 @@ def label(s: float) -> str:
     if s <= -0.25:
         return "bearish"
     return "neutral"
+
+# ── VADER blend + opinion detection (added layer) ───────────────────────────
+# VADER understands sentence structure (negation, intensifiers, "but" clauses,
+# punctuation) that the keyword lexicon alone misses. We blend the two:
+# finance lexicon knows domain words ("beat", "downgrade"); VADER knows English.
+try:
+    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+    _VADER = SentimentIntensityAnalyzer()
+except Exception:
+    _VADER = None
+
+# Sources whose question-headlines are editorial/opinion, not hard news.
+OPINION_SOURCES = re.compile(
+    r"seeking ?alpha|motley ?fool|fool\.com|zacks|investorplace|"
+    r"benzinga|the street|thestreet", re.IGNORECASE)
+
+# Headline patterns that signal opinion/clickbait rather than an event.
+OPINION_PATTERNS = re.compile(
+    r"\?\s*$|"                                  # ends with a question mark
+    r"^\s*(is|are|should|could|will|why|how|"
+    r"can|does|do|here'?s why|the case for|"
+    r"is it time|too late|better buy|"
+    r"vs\.?|versus)\b", re.IGNORECASE)
+
+
+def is_opinion(text: str, source: str = "") -> bool:
+    """True for editorial/question headlines that shouldn't drive sentiment."""
+    src_op = bool(OPINION_SOURCES.search(source))
+    pat_op = bool(OPINION_PATTERNS.search(text.strip()))
+    # A question from any source is opinion; a non-question from an opinion
+    # source (e.g. an SA news brief) is still treated as news.
+    return pat_op or (src_op and "?" in text)
+
+
+def _blended_raw(text: str) -> float:
+    """Combine finance lexicon score with VADER's sentence-level score."""
+    lex = _raw_score(text)
+    if _VADER is None:
+        return lex
+    v = _VADER.polarity_scores(text)["compound"]  # already in [-1, 1]
+    # Weight the finance lexicon more (it knows the domain), VADER as support.
+    blended = 0.65 * lex + 0.35 * v
+    return max(-1.0, min(1.0, blended))

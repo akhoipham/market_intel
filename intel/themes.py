@@ -136,3 +136,84 @@ _COMPILED = {
 def tag(text: str) -> list[str]:
     padded = f" {text} "  # so edge keywords like " ai " can hit at boundaries
     return [theme for theme, pat in _COMPILED.items() if pat.search(padded)]
+
+
+# ── LENS HIERARCHY ───────────────────────────────────────────────────────────
+# One level above themes. Each theme belongs to a lens; geopolitics themes
+# additionally map DOWN to the sectors/tickers they typically move, so a single
+# conflict story can light up oil + defense + shipping at once.
+
+GEOPOLITICS_THEMES: dict[str, list[str]] = {
+    "Middle East Conflict": [
+        "israel", "gaza", "hamas", "hezbollah", "iran", "tehran", "houthi",
+        "red sea", "strait of hormuz", "lebanon", "syria", "idf",
+    ],
+    "Russia–Ukraine War": [
+        "ukraine", "russia", "putin", "kyiv", "moscow", "kremlin", "donbas",
+        "crimea", "zelensky", "wagner",
+    ],
+    "China–Taiwan Tensions": [
+        "taiwan", "taiwan strait", "beijing", "xi jinping", "pla ", "tsmc",
+        "reunification", "south china sea",
+    ],
+    "US Elections & Policy": [
+        "white house", "congress", "senate", "house vote", "president",
+        "executive order", "government shutdown", "debt ceiling", "filibuster",
+        "supreme court", "election", "campaign",
+    ],
+    "Trade War & Tariffs": [
+        "tariff", "tariffs", "trade war", "export controls", "sanctions",
+        "import duty", "trade deal", "wto", "decoupling", "entity list",
+    ],
+    "Sanctions & Embargoes": [
+        "sanction", "sanctions", "embargo", "asset freeze", "blacklist",
+        "ofac", "swift ban",
+    ],
+    "Energy Geopolitics": [
+        "opec", "opec+", "oil embargo", "gas pipeline", "nord stream",
+        "energy crisis", "strategic reserve", "spr release",
+    ],
+    "Defense Spending & NATO": [
+        "nato", "defense budget", "military aid", "arms deal", "pentagon budget",
+        "rearmament", "defense spending",
+    ],
+}
+
+# Which sectors/themes each geopolitics theme tends to move.
+GEO_IMPACT: dict[str, list[str]] = {
+    "Middle East Conflict":   ["Oil & Gas", "Defense & Aerospace"],
+    "Russia–Ukraine War":     ["Oil & Gas", "Defense & Aerospace", "Gold & Miners"],
+    "China–Taiwan Tensions":  ["Semiconductors", "Defense & Aerospace"],
+    "US Elections & Policy":  ["Rates & Fed", "Healthcare", "Banks & Credit"],
+    "Trade War & Tariffs":    ["Semiconductors", "EV & Batteries", "Retail & Consumer"],
+    "Sanctions & Embargoes":  ["Oil & Gas", "Banks & Credit"],
+    "Energy Geopolitics":     ["Oil & Gas", "Gold & Miners"],
+    "Defense Spending & NATO":["Defense & Aerospace"],
+}
+
+# Assign every theme to a lens. Markets = everything in THEMES not listed below.
+LENS_MACRO = {"Rates & Fed", "Tariffs & Trade", "Banks & Credit"}
+LENS_GEO = set(GEOPOLITICS_THEMES.keys())
+
+# Merge geopolitics themes into the master THEMES dict so tagging picks them up.
+for _theme, _kws in GEOPOLITICS_THEMES.items():
+    THEMES[_theme] = _kws
+
+# Rebuild compiled patterns now that THEMES grew.
+_COMPILED = {
+    theme: re.compile("|".join(_kw_pattern(k) for k in kws), re.IGNORECASE)
+    for theme, kws in THEMES.items()
+}
+
+
+def lens_for(theme: str) -> str:
+    if theme in LENS_GEO:
+        return "Geopolitics"
+    if theme in LENS_MACRO:
+        return "Macro & Rates"
+    return "Markets"
+
+
+def impacted_themes(theme: str) -> list[str]:
+    """For a geopolitics theme, the downstream sectors/themes it tends to move."""
+    return GEO_IMPACT.get(theme, [])
