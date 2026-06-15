@@ -1,7 +1,10 @@
-"""Build a self-contained dashboard.html from the SQLite store.
+"""Build dashboard.html + data.json from the SQLite store.
 
-Everything is embedded (data as JSON, no external JS), so the file works
-offline and can be regenerated on a cron after each pipeline run.
+dashboard.html  — the static shell (never changes after first deploy)
+data.json       — the data payload, fetched live every 2 minutes by the browser
+
+This split means the browser never needs a full page reload to see fresh data.
+All filter state (range, theme, ticker, search) is preserved across refreshes.
 """
 from __future__ import annotations
 
@@ -11,7 +14,9 @@ from pathlib import Path
 
 from .store import connect, export_window
 
-OUT = Path(__file__).resolve().parent.parent / "dashboard.html"
+ROOT     = Path(__file__).resolve().parent.parent
+OUT      = ROOT / "dashboard.html"
+DATA_OUT = ROOT / "data.json"
 
 TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
@@ -37,7 +42,6 @@ a{color:inherit;text-decoration:none}
 a:hover .hl-title{color:var(--amber)}
 :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 
-/* status bar */
 .statusbar{display:flex;align-items:baseline;gap:1.2rem;padding:.7rem 1.4rem;
   border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
 .brand{font-family:var(--sans);font-weight:800;font-stretch:80%;letter-spacing:.04em;
@@ -45,8 +49,15 @@ a:hover .hl-title{color:var(--amber)}
 .brand span{color:var(--text)}
 .statusbar .meta{color:var(--dim);font-size:.72rem}
 .statusbar .meta b{color:var(--text);font-weight:500}
+.live-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;
+  padding:.18rem .5rem;border-radius:2px;border:1px solid var(--line);
+  color:var(--dim);margin-left:.5rem;vertical-align:middle}
+.live-badge .dot{width:.45rem;height:.45rem;border-radius:50%;
+  background:var(--bull);flex:0 0 auto}
+.live-badge.pulse .dot{animation:livepulse 1s ease-out}
+.live-badge.updated{border-color:var(--amber-dim);color:var(--amber)}
+@keyframes livepulse{0%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}100%{opacity:1;transform:scale(1)}}
 
-/* controls row */
 .controls{display:flex;align-items:center;gap:1rem;padding:.8rem 1.4rem;flex-wrap:wrap}
 .ranges{display:flex;border:1px solid var(--line);border-radius:3px;overflow-x:auto;max-width:100%}
 .ranges button{background:transparent;border:0;border-right:1px solid var(--line);
@@ -61,7 +72,6 @@ a:hover .hl-title{color:var(--amber)}
 .kpis{display:flex;gap:1.4rem;margin-left:auto;font-size:.72rem;color:var(--dim)}
 .kpis b{display:block;font-size:1.05rem;color:var(--text);font-weight:600}
 
-/* theme tape — the signature element */
 .tape-label{padding:.2rem 1.4rem 0;font-size:.62rem;letter-spacing:.18em;color:var(--faint)}
 .tape{display:flex;gap:.45rem;overflow-x:auto;padding:.55rem 1.4rem .9rem;
   scrollbar-width:thin;scrollbar-color:var(--faint) transparent}
@@ -75,14 +85,12 @@ a:hover .hl-title{color:var(--amber)}
 .chip .stats{display:flex;gap:.5rem;font-size:.66rem;color:var(--dim)}
 .chip .stats .n{color:var(--text)}
 
-/* main grid */
 .grid{display:grid;grid-template-columns:minmax(360px,5fr) minmax(320px,7fr);
   gap:1px;background:var(--line);border-top:1px solid var(--line)}
 .pane{background:var(--bg);min-height:60vh}
 .pane h2{font-family:var(--sans);font-stretch:85%;font-weight:700;font-size:.72rem;
   letter-spacing:.16em;color:var(--dim);padding:.85rem 1.2rem .5rem;text-transform:uppercase}
 
-/* ticker table */
 table{width:100%;border-collapse:collapse;font-size:.78rem}
 th{font-size:.62rem;letter-spacing:.12em;color:var(--faint);text-align:left;
   font-weight:500;padding:.3rem .6rem;border-bottom:1px solid var(--line);
@@ -102,7 +110,6 @@ tr.tk.on td{background:var(--panel2)}
 .bar{display:inline-block;height:.55rem;border-radius:1px;vertical-align:middle}
 .themes-mini{color:var(--faint);font-size:.64rem;max-width:11rem}
 
-/* headline tape */
 .hl{display:flex;gap:.7rem;padding:.55rem 1.2rem;border-bottom:1px solid #151a23}
 .hl:hover{background:var(--panel)}
 .dot{flex:0 0 auto;width:.55rem;height:.55rem;border-radius:50%;margin-top:.32rem}
@@ -128,7 +135,13 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 <div class="statusbar">
   <div class="brand">SIGNAL<span>/DESK</span></div>
   <div class="meta">north american equities · thematic news intelligence</div>
-  <div class="meta" style="margin-left:auto">data as of <b id="asof"></b> · <b id="total-n"></b> headlines in window</div>
+  <div class="meta" style="margin-left:auto">
+    data as of <b id="asof">loading…</b> · <b id="total-n">–</b> headlines in window
+    <span class="live-badge" id="live-badge">
+      <span class="dot" id="live-dot"></span>
+      <span id="live-label">connecting…</span>
+    </span>
+  </div>
 </div>
 
 <div class="controls">
@@ -166,76 +179,142 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 </div>
 
 <footer>
-  prototype · sources: public RSS wires + SEC EDGAR · sentiment: lexicon (headline-level) ·
-  matching tiers: cashtag → exchange tag → curated name/alias with ambiguity guard ·
-  regenerate with <span style="color:var(--dim)">python run.py fetch && python run.py build</span>
+  live · sources: public RSS wires + SEC EDGAR · sentiment: lexicon (headline-level) ·
+  matching: cashtag → exchange tag → curated name/alias with ambiguity guard ·
+  auto-refreshes every 2 min without page reload
 </footer>
 
 <script>
-const DATA = __DATA__;
-const BUILT = __BUILT__;
-
-const YTD_S = (() => { const d = new Date(BUILT*1000);
-  return Math.max(86400, Math.round(BUILT - new Date(d.getFullYear(),0,1).getTime()/1000)); })();
-const RANGES = [["1H",3600],["8H",28800],["1D",86400],["3D",259200],["1W",604800],
-  ["1M",2592000],["3M",7776000],["6M",15552000],["YTD",YTD_S],["1Y",31536000]];
-const S = { range: 86400, theme: null, ticker: null, q: "", sortK: "n", sortDir: -1 };
+// ── state ──────────────────────────────────────────────────────────────────
+let DATA = [], BUILT = 0;
+const REFRESH_S = 120; // seconds between data fetches
+let secsLeft = REFRESH_S;
+let firstLoad = true;
 
 const $ = id => document.getElementById(id);
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const sentClass = v => v >= .25 ? "bull" : v <= -.25 ? "bear" : "flat";
-const fmtSent = v => (v>0?"+":"") + v.toFixed(2);
-const ago = p => { const d = BUILT - p;
-  if (d < 3600) return Math.max(1, Math.round(d/60)) + "m";
-  if (d < 86400) return Math.round(d/3600) + "h";
-  if (d < 5184000) return Math.round(d/86400) + "d";
-  return Math.round(d/2592000) + "mo"; };
+const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sentClass = v => v>=.25?"bull":v<=-.25?"bear":"flat";
+const fmtSent = v => (v>0?"+":"")+v.toFixed(2);
+const ago = p => {
+  const d = BUILT-p;
+  if(d<3600) return Math.max(1,Math.round(d/60))+"m";
+  if(d<86400) return Math.round(d/3600)+"h";
+  if(d<5184000) return Math.round(d/86400)+"d";
+  return Math.round(d/2592000)+"mo";
+};
 
+const S = {range:86400, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1};
+
+// ── data loading ────────────────────────────────────────────────────────────
+const DATA_URL = "./data.json";
+const IS_LOCAL = location.protocol === "file:";
+
+async function loadData() {
+  if (IS_LOCAL) {
+    $("live-label").textContent = "local mode — open via server for live refresh";
+    return;
+  }
+  try {
+    const resp = await fetch(DATA_URL + "?_=" + Date.now());
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const json = await resp.json();
+    DATA  = json.articles || [];
+    BUILT = json.built   || Math.floor(Date.now()/1000);
+    secsLeft = REFRESH_S;
+    render();
+    flashUpdated();
+    firstLoad = false;
+  } catch(e) {
+    console.warn("data.json fetch failed:", e);
+    $("live-label").textContent = "fetch error — retrying…";
+  }
+}
+
+function flashUpdated() {
+  const badge = $("live-badge");
+  $("live-label").textContent = firstLoad ? "live" : "↻ updated";
+  badge.classList.add("updated");
+  setTimeout(() => { badge.classList.remove("updated"); updateCountdown(); }, 1800);
+}
+
+function updateCountdown() {
+  if (IS_LOCAL) return;
+  const m = Math.floor(secsLeft/60), s = secsLeft%60;
+  $("live-label").textContent = "refresh in " + m + ":" + String(s).padStart(2,"0");
+}
+
+// tick every second: decrement countdown, trigger fetch when it hits 0
+setInterval(() => {
+  secsLeft = Math.max(0, secsLeft - 1);
+  if (secsLeft === 0) { loadData(); secsLeft = REFRESH_S; return; }
+  // only update label when badge isn't showing "updated" flash
+  if (!$("live-badge").classList.contains("updated")) updateCountdown();
+  // pulse the dot every 10s as a heartbeat
+  if (secsLeft % 10 === 0) {
+    const badge = $("live-badge");
+    badge.classList.add("pulse");
+    setTimeout(() => badge.classList.remove("pulse"), 1000);
+  }
+}, 1000);
+
+// ── render ──────────────────────────────────────────────────────────────────
 function inWindow(a){ return BUILT - a.p <= S.range; }
 function passText(a){
   if(!S.q) return true; const q = S.q.toLowerCase();
   return a.t.toLowerCase().includes(q) ||
-    a.tk.some(m => m.ticker.toLowerCase().includes(q) || m.company.toLowerCase().includes(q));
+    a.tk.some(m=>m.ticker.toLowerCase().includes(q)||m.company.toLowerCase().includes(q));
 }
-function visible(){ return DATA.filter(a => inWindow(a) && passText(a)
-  && (!S.theme || a.th.includes(S.theme))
-  && (!S.ticker || a.tk.some(m => m.ticker === S.ticker))); }
+function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)
+  &&(!S.theme||a.th.includes(S.theme))
+  &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
 function render(){
-  const win = visible();
-  // KPIs
-  const winNoTk = DATA.filter(a => inWindow(a) && passText(a) && (!S.theme || a.th.includes(S.theme)));
-  $("total-n").textContent = DATA.filter(inWindow).length;
-  $("k-bull").textContent = win.filter(a => a.sn >= .25).length;
-  $("k-bear").textContent = win.filter(a => a.sn <= -.25).length;
+  const YTD_S = (() => { const d=new Date(BUILT*1000);
+    return Math.max(86400,Math.round(BUILT-new Date(d.getFullYear(),0,1).getTime()/1000)); })();
+  const RANGES=[["1H",3600],["8H",28800],["1D",86400],["3D",259200],["1W",604800],
+    ["1M",2592000],["3M",7776000],["6M",15552000],["YTD",YTD_S],["1Y",31536000]];
 
-  // theme tape (ignores theme filter itself so chips stay comparable)
-  const base = DATA.filter(a => inWindow(a) && passText(a) && (!S.ticker || a.tk.some(m=>m.ticker===S.ticker)));
-  const tstat = {};
+  // rebuild range buttons only on first render or BUILT change
+  if (!$("ranges").dataset.built || $("ranges").dataset.built !== String(BUILT)) {
+    $("ranges").dataset.built = BUILT;
+    $("ranges").innerHTML = RANGES.map(([l,s])=>
+      `<button data-s="${s}" class="${s===S.range?"on":""}" role="tab">${l}</button>`).join("");
+  }
+
+  $("asof").textContent = BUILT ? new Date(BUILT*1000).toLocaleString() : "–";
+  $("total-n").textContent = DATA.filter(inWindow).length;
+
+  const win = visible();
+  const winNoTk = DATA.filter(a=>inWindow(a)&&passText(a)&&(!S.theme||a.th.includes(S.theme)));
+  $("k-bull").textContent = win.filter(a=>a.sn>=.25).length;
+  $("k-bear").textContent = win.filter(a=>a.sn<=-.25).length;
+
+  // theme tape
+  const base = DATA.filter(a=>inWindow(a)&&passText(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
+  const tstat={};
   for(const a of base) for(const th of a.th){
-    (tstat[th] ||= {n:0, s:0}); tstat[th].n++; tstat[th].s += a.sn; }
-  const tape = Object.entries(tstat).sort((x,y) => y[1].n - x[1].n);
-  $("tape").innerHTML = tape.map(([name,v]) => {
-    const avg = v.s / v.n, cls = sentClass(avg);
-    return `<div class="chip ${S.theme===name?"on":""}" data-th="${esc(name)}" tabindex="0" role="button"
-      style="border-bottom-color:var(--${cls==="bull"?"bull":cls==="bear"?"bear":"line"})">
-      <span class="name">${esc(name)}</span>
-      <span class="stats"><span class="n">${v.n}</span><span class="${cls}">${fmtSent(avg)}</span></span></div>`;
-  }).join("") || `<div class="empty">No themes detected in this window.</div>`;
+    (tstat[th]||={n:0,s:0}); tstat[th].n++; tstat[th].s+=a.sn; }
+  $("tape").innerHTML = Object.entries(tstat).sort((x,y)=>y[1].n-x[1].n)
+    .map(([name,v])=>{
+      const avg=v.s/v.n, cls=sentClass(avg);
+      return `<div class="chip ${S.theme===name?"on":""}" data-th="${esc(name)}" tabindex="0" role="button"
+        style="border-bottom-color:var(--${cls==="bull"?"bull":cls==="bear"?"bear":"line"})">
+        <span class="name">${esc(name)}</span>
+        <span class="stats"><span class="n">${v.n}</span><span class="${cls}">${fmtSent(avg)}</span></span></div>`;
+    }).join("") || `<div class="empty">No themes in this window.</div>`;
 
   // ticker leaderboard
-  const ts = {};
+  const ts={};
   for(const a of winNoTk) for(const m of a.tk){
-    const r = (ts[m.ticker] ||= {ticker:m.ticker, company:m.company, x:m.exchange, n:0, s:0, th:{}});
-    r.n++; r.s += a.sn; for(const th of a.th) r.th[th] = (r.th[th]||0)+1; }
-  let rows = Object.values(ts).map(r => ({...r, sent: r.s/r.n}));
-  rows.sort((a,b) => { const k = S.sortK;
-    const va = k==="ticker" ? a.ticker : a[k], vb = k==="ticker" ? b.ticker : b[k];
-    return (va<vb?-1:va>vb?1:0) * S.sortDir; });
-  const maxN = Math.max(1, ...rows.map(r=>r.n));
-  $("tk-body").innerHTML = rows.slice(0,80).map(r => {
-    const cls = sentClass(r.sent);
-    const topTh = Object.entries(r.th).sort((x,y)=>y[1]-x[1]).slice(0,2).map(e=>e[0]).join(" · ");
+    const r=(ts[m.ticker]||={ticker:m.ticker,company:m.company,x:m.exchange,n:0,s:0,th:{}});
+    r.n++; r.s+=a.sn; for(const th of a.th) r.th[th]=(r.th[th]||0)+1; }
+  let rows=Object.values(ts).map(r=>({...r,sent:r.s/r.n}));
+  rows.sort((a,b)=>{const k=S.sortK,va=k==="ticker"?a.ticker:a[k],vb=k==="ticker"?b.ticker:b[k];
+    return (va<vb?-1:va>vb?1:0)*S.sortDir;});
+  const maxN=Math.max(1,...rows.map(r=>r.n));
+  $("tk-body").innerHTML = rows.slice(0,80).map(r=>{
+    const cls=sentClass(r.sent);
+    const topTh=Object.entries(r.th).sort((x,y)=>y[1]-x[1]).slice(0,2).map(e=>e[0]).join(" · ");
     return `<tr class="tk ${S.ticker===r.ticker?"on":""}" data-tk="${esc(r.ticker)}" tabindex="0">
       <td class="tk-sym">${esc(r.ticker)} <span class="tk-x">${esc(r.x)}</span></td>
       <td class="tk-name" title="${esc(r.company)}">${esc(r.company)}</td>
@@ -244,18 +323,18 @@ function render(){
       <td><span class="bar ${cls}" style="width:${(4+56*r.n/maxN).toFixed(0)}px;background:currentColor"></span></td>
       <td class="themes-mini">${esc(topTh)}</td></tr>`;
   }).join("");
-  $("tk-empty").hidden = rows.length > 0;
+  $("tk-empty").hidden = rows.length>0;
   $("k-tickers").textContent = rows.length;
-  document.querySelectorAll("#tk-table th").forEach(th =>
-    th.classList.toggle("sorted", th.dataset.k === S.sortK));
+  document.querySelectorAll("#tk-table th").forEach(th=>
+    th.classList.toggle("sorted",th.dataset.k===S.sortK));
 
   // headline tape
-  const hls = win.slice(0, 250);
+  const hls=win.slice(0,250);
   $("hl-count").textContent = `· ${win.length}`;
-  $("hl-list").innerHTML = hls.map(a => {
-    const cls = sentClass(a.sn);
-    const tks = a.tk.slice(0,4).map(m=>esc(m.ticker)).join(" ");
-    const ths = a.th.slice(0,2).map(esc).join(" · ");
+  $("hl-list").innerHTML = hls.map(a=>{
+    const cls=sentClass(a.sn);
+    const tks=a.tk.slice(0,4).map(m=>esc(m.ticker)).join(" ");
+    const ths=a.th.slice(0,2).map(esc).join(" · ");
     return `<a href="${esc(a.u)}" target="_blank" rel="noopener">
       <div class="hl ${a.k==="filing"?"filing":""}">
       <span class="dot ${cls}" style="background:currentColor"></span>
@@ -264,57 +343,58 @@ function render(){
       ${tks?`<span class="tkx">${tks}</span>`:""}${ths?`<span class="tag">${ths}</span>`:""}</div>
       </div></div></a>`;
   }).join("");
-  $("hl-empty").hidden = hls.length > 0;
+  $("hl-empty").hidden = hls.length>0;
 
-  // active filter pills
-  const f = [];
-  if (S.theme) f.push(`theme=${S.theme}`);
-  if (S.ticker) f.push(`ticker=${S.ticker}`);
-  $("active-filters").innerHTML = f.length ?
-    ` <span style="color:var(--amber)">· ${f.map(esc).join("  ")}</span><button class="clear" id="clear-f">clear</button>` : "";
-  const cf = $("clear-f"); if (cf) cf.onclick = () => { S.theme = S.ticker = null; render(); };
+  const f=[];
+  if(S.theme) f.push(`theme=${S.theme}`);
+  if(S.ticker) f.push(`ticker=${S.ticker}`);
+  $("active-filters").innerHTML = f.length
+    ? ` <span style="color:var(--amber)">· ${f.map(esc).join("  ")}</span><button class="clear" id="clear-f">clear</button>` : "";
+  const cf=$("clear-f"); if(cf) cf.onclick=()=>{ S.theme=S.ticker=null; render(); };
 }
 
-// wire up controls
-$("ranges").innerHTML = RANGES.map(([l,s]) =>
-  `<button data-s="${s}" class="${s===S.range?"on":""}" role="tab">${l}</button>`).join("");
-$("ranges").addEventListener("click", e => {
-  const b = e.target.closest("button"); if(!b) return;
-  S.range = +b.dataset.s;
-  document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on", x===b));
+// ── event wiring ────────────────────────────────────────────────────────────
+$("ranges").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  S.range=+b.dataset.s;
+  document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",x===b));
   render(); });
-$("q").addEventListener("input", e => { S.q = e.target.value.trim(); render(); });
-$("tape").addEventListener("click", e => {
-  const c = e.target.closest(".chip"); if(!c) return;
-  S.theme = S.theme === c.dataset.th ? null : c.dataset.th; render(); });
-$("tk-body").addEventListener("click", e => {
-  const r = e.target.closest("tr.tk"); if(!r) return;
-  S.ticker = S.ticker === r.dataset.tk ? null : r.dataset.tk; render(); });
-document.querySelector("#tk-table thead").addEventListener("click", e => {
-  const th = e.target.closest("th[data-k]"); if(!th) return;
-  if (S.sortK === th.dataset.k) S.sortDir *= -1;
-  else { S.sortK = th.dataset.k; S.sortDir = th.dataset.k === "ticker" ? 1 : -1; }
+$("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
+$("tape").addEventListener("click", e=>{
+  const c=e.target.closest(".chip"); if(!c) return;
+  S.theme=S.theme===c.dataset.th?null:c.dataset.th; render(); });
+$("tk-body").addEventListener("click", e=>{
+  const r=e.target.closest("tr.tk"); if(!r) return;
+  S.ticker=S.ticker===r.dataset.tk?null:r.dataset.tk; render(); });
+document.querySelector("#tk-table thead").addEventListener("click", e=>{
+  const th=e.target.closest("th[data-k]"); if(!th) return;
+  if(S.sortK===th.dataset.k) S.sortDir*=-1;
+  else { S.sortK=th.dataset.k; S.sortDir=th.dataset.k==="ticker"?1:-1; }
   render(); });
-[["tape",".chip","click"],["tk-body","tr.tk","click"]].forEach(([id,sel]) =>
-  $(id).addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      const t = e.target.closest(sel); if (t){ e.preventDefault(); t.click(); } } }));
+[["tape",".chip"],["tk-body","tr.tk"]].forEach(([id,sel])=>
+  $(id).addEventListener("keydown", e=>{
+    if(e.key==="Enter"||e.key===" "){
+      const t=e.target.closest(sel); if(t){e.preventDefault();t.click();} } }));
 
-$("asof").textContent = new Date(BUILT*1000).toLocaleString();
-render();
+// ── boot ─────────────────────────────────────────────────────────────────────
+loadData();
 </script>
 </body>
 </html>
 """
 
 
-def build(out: Path = OUT) -> Path:
+def build(out: Path = OUT, data_out: Path = DATA_OUT) -> Path:
     conn = connect()
     data = export_window(conn)
     conn.close()
-    html = (TEMPLATE
-            .replace("__DATA__", json.dumps(data, separators=(",", ":")))
-            .replace("__BUILT__", str(int(time.time()))))
-    out.write_text(html, encoding="utf-8")
-    print(f"Built {out} with {len(data)} articles.")
+    built = int(time.time())
+
+    # Write data.json — the payload the browser fetches every 2 minutes
+    payload = {"built": built, "articles": data}
+    data_out.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+
+    # Write dashboard.html — static shell, only needs to be deployed once
+    out.write_text(TEMPLATE, encoding="utf-8")
+    print(f"Built {out.name} + {data_out.name} ({len(data)} articles).")
     return out
