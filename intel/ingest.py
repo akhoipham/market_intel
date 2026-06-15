@@ -1,11 +1,11 @@
-"""Ingestion: pull headlines from RSS feeds and SEC EDGAR's live filing feed.
+"""Ingestion: parallel RSS fetching + SEC EDGAR.
 
-Design choices:
-- Every feed failure is isolated (one dead feed never kills a run).
-- Timestamps normalized to UTC epoch seconds.
-- EDGAR is polled with the required descriptive User-Agent and gives you
-  8-K (material events) and Form 4 (insider trades) titles, which the
-  matcher can resolve to tickers via the company name in the filing title.
+v2 changes:
+- All RSS feeds fetched concurrently via ThreadPoolExecutor (was sequential)
+- With 15 feeds at 15s timeout each, sequential worst-case was 225s;
+  parallel worst-case is ~15s (one slow feed doesn't block others)
+- EDGAR kept sequential — SEC asks for polite, low-volume access
+- Per-feed failure isolation unchanged (one dead feed never kills a run)
 """
 from __future__ import annotations
 
@@ -13,16 +13,19 @@ import calendar
 import json
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 
 import feedparser
 import requests
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR  = Path(__file__).resolve().parent.parent / "data"
 FEEDS_JSON = DATA_DIR / "feeds.json"
 
-UA = {"User-Agent": "market-intel-prototype/0.1 (personal research; contact@example.com)"}
+UA = {"User-Agent": "market-intel-prototype/0.2 (personal research; contact@example.com)"}
+RSS_WORKERS = 10   # concurrent RSS fetches
+RSS_TIMEOUT = 12   # seconds per feed (slightly tighter to fail fast on dead feeds)
 
 
 @dataclass
@@ -30,8 +33,8 @@ class Article:
     title: str
     url: str
     source: str
-    published: int  # epoch seconds UTC
-    kind: str = "news"  # "news" | "filing"
+    published: int   # epoch seconds UTC
+    kind: str = "news"
 
 
 def _entry_time(entry) -> int:
@@ -42,7 +45,7 @@ def _entry_time(entry) -> int:
     return int(time.time())
 
 
-def fetch_rss(name: str, url: str, timeout: int = 15) -> list[Article]:
+def fetch_rss(name: str, url: str, timeout: int = RSS_TIMEOUT) -> list[Article]:
     try:
         resp = requests.get(url, headers=UA, timeout=timeout)
         resp.raise_for_status()
@@ -53,7 +56,7 @@ def fetch_rss(name: str, url: str, timeout: int = 15) -> list[Article]:
     out = []
     for entry in parsed.entries:
         title = re.sub(r"\s+", " ", getattr(entry, "title", "")).strip()
-        link = getattr(entry, "link", "")
+        link  = getattr(entry, "link", "")
         if not title or not link:
             continue
         out.append(Article(title=title, url=link, source=name,
@@ -73,11 +76,11 @@ def fetch_edgar(forms: list[str], url_template: str) -> list[Article]:
             print(f"  [warn] EDGAR {form}: {type(e).__name__}: {e}")
             continue
         for entry in parsed.entries:
-            # Titles look like: "8-K - APPLE INC (0000320193) (Filer)"
-            title = re.sub(r"\s+", " ", getattr(entry, "title", "")).strip()
+            title   = re.sub(r"\s+", " ", getattr(entry, "title", "")).strip()
             company = re.sub(r"^\S+\s*-\s*", "", title)
             company = re.sub(r"\(\d{7,}\).*$", "", company).strip().title()
-            label = {"8-K": "8-K material event", "4": "Form 4 insider filing"}.get(form, form)
+            label   = {"8-K": "8-K material event",
+                       "4":   "Form 4 insider filing"}.get(form, form)
             out.append(Article(
                 title=f"{label}: {company}",
                 url=getattr(entry, "link", ""),
@@ -85,20 +88,32 @@ def fetch_edgar(forms: list[str], url_template: str) -> list[Article]:
                 published=_entry_time(entry),
                 kind="filing",
             ))
-        time.sleep(0.4)  # be polite to SEC
+        time.sleep(0.4)   # polite pause between EDGAR requests
     return out
 
 
 def fetch_all(feeds_path: Path = FEEDS_JSON) -> list[Article]:
-    cfg = json.loads(feeds_path.read_text())
+    cfg   = json.loads(feeds_path.read_text())
+    feeds = cfg.get("rss_feeds", [])
+
+    # ── parallel RSS ─────────────────────────────────────────────────────────
     articles: list[Article] = []
-    for feed in cfg.get("rss_feeds", []):
-        got = fetch_rss(feed["name"], feed["url"])
-        print(f"  {feed['name']}: {len(got)} items")
-        articles.extend(got)
+    t0 = time.time()
+    with ThreadPoolExecutor(max_workers=min(RSS_WORKERS, len(feeds))) as ex:
+        futures = {ex.submit(fetch_rss, f["name"], f["url"]): f["name"]
+                   for f in feeds}
+        for future in as_completed(futures):
+            name = futures[future]
+            got  = future.result()
+            print(f"  {name}: {len(got)} items")
+            articles.extend(got)
+    print(f"  RSS complete in {time.time()-t0:.1f}s ({len(articles)} items)")
+
+    # ── sequential EDGAR ─────────────────────────────────────────────────────
     edgar = cfg.get("edgar", {})
     if edgar.get("enabled"):
         got = fetch_edgar(edgar.get("forms", ["8-K"]), edgar["url_template"])
         print(f"  SEC EDGAR: {len(got)} items")
         articles.extend(got)
+
     return articles

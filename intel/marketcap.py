@@ -1,25 +1,26 @@
-"""Market-cap tiers, fetched lazily for matched tickers and cached 24h.
+"""Market-cap tiers — parallel fetching, 24h cache, failure suppression.
 
-Why lazy: the universe has ~4,500 tickers but only a few hundred appear in
-news on any given day. We fetch caps only for tickers that actually matched,
-cache them in data/marketcap_cache.json, and refresh entries older than 24h.
-That keeps us to ~100-300 yfinance calls/day instead of thousands.
-
-Tiers (USD):
-    mega   >= 200B
-    large  10B - 200B
-    mid    2B - 10B
-    small  300M - 2B
-    micro  < 300M
+Key speed improvements over v1:
+- ThreadPoolExecutor: fetches N tickers concurrently instead of one at a time
+- No sleep between requests (threading handles natural rate distribution)
+- Failed/delisted tickers cached for 7 days so they never retry in normal runs
+- yfinance log noise suppressed
 """
 from __future__ import annotations
 
 import json
+import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-CACHE = Path(__file__).resolve().parent.parent / "data" / "marketcap_cache.json"
-TTL = 86400  # 24h
+# Silence the yfinance "possibly delisted" and "no data" warnings.
+logging.getLogger("yfinance").setLevel(logging.CRITICAL)
+
+CACHE    = Path(__file__).resolve().parent.parent / "data" / "marketcap_cache.json"
+TTL_OK   = 86400      # 24h for successful lookups
+TTL_FAIL = 604800     # 7 days for failed/delisted — stops pointless retries
+MAX_WORKERS = 12      # concurrent yfinance requests
 
 TIERS = [
     ("mega",  200_000_000_000, float("inf")),
@@ -49,33 +50,54 @@ def _load_cache() -> dict:
 
 
 def _save_cache(c: dict) -> None:
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
     CACHE.write_text(json.dumps(c, separators=(",", ":")))
 
 
-def _yf_symbol(ticker: str) -> str:
-    # Our display tickers use ".TO" for TSX, which is already yfinance's format.
-    return ticker
+def _fetch_one(ticker: str) -> tuple[str, float | None]:
+    """Fetch market cap for a single ticker. Returns (ticker, cap_or_None)."""
+    try:
+        import yfinance as yf
+        info = yf.Ticker(ticker).fast_info
+        cap = getattr(info, "market_cap", None)
+        if cap is None:
+            cap = getattr(info, "marketCap", None)
+        return ticker, cap
+    except Exception:
+        return ticker, None
 
 
 def fetch_caps(tickers: list[str], cache: dict | None = None) -> dict:
-    """Return {ticker: {cap, tier, ts}} for the given tickers, using cache
-    where fresh and fetching the rest. Network failures degrade gracefully."""
+    """Return {ticker: {cap, tier, ts}} using cache where fresh, fetching stale
+    tickers in parallel. Gracefully degrades if yfinance is unavailable."""
     cache = cache if cache is not None else _load_cache()
     now = int(time.time())
-    stale = [t for t in tickers
-             if t not in cache or now - cache[t].get("ts", 0) > TTL]
+
+    # Split: fresh (use cache), stale (need fetch)
+    stale = []
+    for t in tickers:
+        entry = cache.get(t)
+        if entry is None:
+            stale.append(t)
+        elif entry.get("cap") is None:
+            # Failed last time — use longer TTL
+            if now - entry.get("ts", 0) > TTL_FAIL:
+                stale.append(t)
+        elif now - entry.get("ts", 0) > TTL_OK:
+            stale.append(t)
 
     if stale:
         try:
-            import yfinance as yf
-            for t in stale:
-                try:
-                    info = yf.Ticker(_yf_symbol(t)).fast_info
-                    cap = getattr(info, "market_cap", None) or info.get("market_cap")
+            import yfinance  # noqa — confirm available before spinning threads
+            t0 = time.time()
+            with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, len(stale))) as ex:
+                futures = {ex.submit(_fetch_one, t): t for t in stale}
+                for future in as_completed(futures):
+                    t, cap = future.result()
                     cache[t] = {"cap": cap, "tier": tier_for(cap), "ts": now}
-                except Exception:
-                    cache[t] = {"cap": None, "tier": "unknown", "ts": now}
-                time.sleep(0.15)  # be gentle
+            elapsed = time.time() - t0
+            hits = sum(1 for t in stale if cache[t]["cap"])
+            print(f"  market caps: {hits}/{len(stale)} fetched in {elapsed:.1f}s")
         except ImportError:
             for t in stale:
                 cache.setdefault(t, {"cap": None, "tier": "unknown", "ts": now})
@@ -86,5 +108,5 @@ def fetch_caps(tickers: list[str], cache: dict | None = None) -> dict:
 
 
 def tier_only(tickers: list[str]) -> dict:
-    """Convenience: {ticker: tier}."""
+    """Convenience: {ticker: tier_string}."""
     return {t: v["tier"] for t, v in fetch_caps(tickers).items()}
