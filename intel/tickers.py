@@ -16,6 +16,7 @@ from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SEED_CSV = DATA_DIR / "tickers_seed.csv"
+EXPANDED_CSV = DATA_DIR / "universe_expanded.csv"
 
 # SEC requires a descriptive User-Agent on all requests.
 SEC_HEADERS = {"User-Agent": "market-intel-prototype contact@example.com"}
@@ -54,6 +55,20 @@ class Company:
 
 
 def load_universe(path: Path = SEED_CSV) -> list[Company]:
+    """Load the curated seed. If the expanded universe (from exchange CSVs)
+    exists, merge it in — curated entries win on conflicts because they carry
+    hand-tuned aliases and ambiguity flags."""
+    curated = _load_csv(path)
+    if not EXPANDED_CSV.exists():
+        return curated
+    by_ticker = {c.ticker.upper(): c for c in _load_csv(EXPANDED_CSV)}
+    # Overlay curated entries (they have better aliases/ambiguity).
+    for c in curated:
+        by_ticker[c.ticker.upper()] = c
+    return list(by_ticker.values())
+
+
+def _load_csv(path: Path) -> list[Company]:
     companies: list[Company] = []
     with open(path, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):

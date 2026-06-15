@@ -69,6 +69,12 @@ a:hover .hl-title{color:var(--amber)}
   border:1px solid var(--line);border-radius:3px;color:var(--text);
   font:.8rem var(--mono);padding:.45rem .7rem}
 .search::placeholder{color:var(--faint)}
+.selctl{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  color:var(--text);font:.76rem var(--mono);padding:.42rem .55rem;cursor:pointer}
+.selctl:hover{border-color:var(--amber-dim)}
+.chkctl{display:flex;align-items:center;gap:.35rem;font-size:.72rem;
+  color:var(--dim);cursor:pointer;user-select:none}
+.chkctl input{accent-color:var(--amber);cursor:pointer}
 .kpis{display:flex;gap:1.4rem;margin-left:auto;font-size:.72rem;color:var(--dim)}
 .kpis b{display:block;font-size:1.05rem;color:var(--text);font-weight:600}
 
@@ -103,6 +109,14 @@ tr.tk:hover td{background:var(--panel)}
 tr.tk.on td{background:var(--panel2)}
 .tk-sym{color:var(--amber);font-weight:600;white-space:nowrap}
 .tk-x{color:var(--faint);font-size:.64rem}
+.tier{display:inline-block;margin-left:.35rem;font-size:.58rem;font-weight:600;
+  width:1rem;height:1rem;line-height:1rem;text-align:center;border-radius:2px;
+  vertical-align:middle}
+.tier-mega{background:#2a4d8f;color:#cfe0ff}
+.tier-large{background:#1f6b52;color:#bff0dc}
+.tier-mid{background:#6b5a1f;color:#f0e3bf}
+.tier-small{background:#6b3a1f;color:#f0d2bf}
+.tier-micro{background:#6b1f3a;color:#f0bfd2}
 .tk-name{color:var(--dim);font-size:.7rem;max-width:13rem;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
 .num{text-align:right;font-variant-numeric:tabular-nums}
@@ -120,6 +134,9 @@ tr.tk.on td{background:var(--panel2)}
 .hl-meta .tag{color:var(--amber-dim)}
 .hl-meta .tkx{color:var(--amber)}
 .hl.filing .hl-title::before{content:"⊞ ";color:var(--amber-dim)}
+.hl.opinion{opacity:.72}
+.op-tag{font-size:.56rem;font-weight:600;letter-spacing:.08em;color:var(--faint);
+  border:1px solid var(--faint);border-radius:2px;padding:0 .25rem}
 .empty{padding:2.5rem 1.2rem;color:var(--faint);font-size:.78rem;line-height:1.7}
 .clear{background:none;border:1px solid var(--line);color:var(--dim);
   font:.66rem var(--mono);border-radius:3px;padding:.2rem .55rem;cursor:pointer;margin-left:.6rem}
@@ -146,6 +163,21 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 
 <div class="controls">
   <div class="ranges" id="ranges" role="tablist" aria-label="Time range"></div>
+  <select class="selctl" id="lens" aria-label="Lens">
+    <option value="">all lenses</option>
+    <option value="Markets">Markets</option>
+    <option value="Macro & Rates">Macro &amp; Rates</option>
+    <option value="Geopolitics">Geopolitics</option>
+  </select>
+  <select class="selctl" id="cap" aria-label="Market cap">
+    <option value="">all caps</option>
+    <option value="mega">Mega ≥$200B</option>
+    <option value="large">Large $10–200B</option>
+    <option value="mid">Mid $2–10B</option>
+    <option value="small">Small $300M–2B</option>
+    <option value="micro">Micro &lt;$300M</option>
+  </select>
+  <label class="chkctl"><input type="checkbox" id="hide-opinion"> hide opinion</label>
   <input class="search" id="q" type="search" placeholder="filter: ticker, company, keyword…" aria-label="Filter">
   <div class="kpis">
     <div><b id="k-tickers">–</b>tickers mentioned</div>
@@ -203,7 +235,8 @@ const ago = p => {
   return Math.round(d/2592000)+"mo";
 };
 
-const S = {range:86400, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1};
+const S = {range:86400, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1,
+           lens:"", cap:"", hideOpinion:false};
 
 // ── data loading ────────────────────────────────────────────────────────────
 const DATA_URL = "./data.json";
@@ -264,7 +297,11 @@ function passText(a){
   return a.t.toLowerCase().includes(q) ||
     a.tk.some(m=>m.ticker.toLowerCase().includes(q)||m.company.toLowerCase().includes(q));
 }
-function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)
+function passLens(a){ return !S.lens || (a.ln||[]).includes(S.lens); }
+function passCap(a){ return !S.cap || a.tk.some(m=>m.tier===S.cap); }
+function passOpinion(a){ return !S.hideOpinion || a.k!=="opinion"; }
+function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)
+  &&passCap(a)&&passOpinion(a)
   &&(!S.theme||a.th.includes(S.theme))
   &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
@@ -285,12 +322,14 @@ function render(){
   $("total-n").textContent = DATA.filter(inWindow).length;
 
   const win = visible();
-  const winNoTk = DATA.filter(a=>inWindow(a)&&passText(a)&&(!S.theme||a.th.includes(S.theme)));
+  const winNoTk = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
+    &&passOpinion(a)&&(!S.theme||a.th.includes(S.theme)));
   $("k-bull").textContent = win.filter(a=>a.sn>=.25).length;
   $("k-bear").textContent = win.filter(a=>a.sn<=-.25).length;
 
   // theme tape
-  const base = DATA.filter(a=>inWindow(a)&&passText(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
+  const base = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
+    &&passOpinion(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
   const tstat={};
   for(const a of base) for(const th of a.th){
     (tstat[th]||={n:0,s:0}); tstat[th].n++; tstat[th].s+=a.sn; }
@@ -306,7 +345,8 @@ function render(){
   // ticker leaderboard
   const ts={};
   for(const a of winNoTk) for(const m of a.tk){
-    const r=(ts[m.ticker]||={ticker:m.ticker,company:m.company,x:m.exchange,n:0,s:0,th:{}});
+    const r=(ts[m.ticker]||={ticker:m.ticker,company:m.company,x:m.exchange,
+      tier:m.tier||"unknown",n:0,s:0,th:{}});
     r.n++; r.s+=a.sn; for(const th of a.th) r.th[th]=(r.th[th]||0)+1; }
   let rows=Object.values(ts).map(r=>({...r,sent:r.s/r.n}));
   rows.sort((a,b)=>{const k=S.sortK,va=k==="ticker"?a.ticker:a[k],vb=k==="ticker"?b.ticker:b[k];
@@ -316,7 +356,7 @@ function render(){
     const cls=sentClass(r.sent);
     const topTh=Object.entries(r.th).sort((x,y)=>y[1]-x[1]).slice(0,2).map(e=>e[0]).join(" · ");
     return `<tr class="tk ${S.ticker===r.ticker?"on":""}" data-tk="${esc(r.ticker)}" tabindex="0">
-      <td class="tk-sym">${esc(r.ticker)} <span class="tk-x">${esc(r.x)}</span></td>
+      <td class="tk-sym">${esc(r.ticker)} <span class="tk-x">${esc(r.x)}</span>${r.tier&&r.tier!=="unknown"?`<span class="tier tier-${r.tier}">${r.tier[0].toUpperCase()}</span>`:""}</td>
       <td class="tk-name" title="${esc(r.company)}">${esc(r.company)}</td>
       <td class="num">${r.n}</td>
       <td class="num ${cls}">${fmtSent(r.sent)}</td>
@@ -336,10 +376,10 @@ function render(){
     const tks=a.tk.slice(0,4).map(m=>esc(m.ticker)).join(" ");
     const ths=a.th.slice(0,2).map(esc).join(" · ");
     return `<a href="${esc(a.u)}" target="_blank" rel="noopener">
-      <div class="hl ${a.k==="filing"?"filing":""}">
+      <div class="hl ${a.k==="filing"?"filing":""} ${a.k==="opinion"?"opinion":""}">
       <span class="dot ${cls}" style="background:currentColor"></span>
       <div class="hl-body"><div class="hl-title">${esc(a.t)}</div>
-      <div class="hl-meta"><span>${ago(a.p)}</span><span class="src">${esc(a.s)}</span>
+      <div class="hl-meta">${a.k==="opinion"?`<span class="op-tag">OPINION</span>`:""}<span>${ago(a.p)}</span><span class="src">${esc(a.s)}</span>
       ${tks?`<span class="tkx">${tks}</span>`:""}${ths?`<span class="tag">${ths}</span>`:""}</div>
       </div></div></a>`;
   }).join("");
@@ -360,6 +400,9 @@ $("ranges").addEventListener("click", e=>{
   document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",x===b));
   render(); });
 $("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
+$("lens").addEventListener("change", e=>{ S.lens=e.target.value; render(); });
+$("cap").addEventListener("change", e=>{ S.cap=e.target.value; render(); });
+$("hide-opinion").addEventListener("change", e=>{ S.hideOpinion=e.target.checked; render(); });
 $("tape").addEventListener("click", e=>{
   const c=e.target.closest(".chip"); if(!c) return;
   S.theme=S.theme===c.dataset.th?null:c.dataset.th; render(); });

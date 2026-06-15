@@ -68,10 +68,12 @@ def process_articles(articles: list[Article],
             skipped += 1
             continue
         matches = matcher.match(a.title)
+        sent_info = sentiment.analyze(a.title, a.source)
+        kind = "opinion" if sent_info["is_opinion"] and a.kind == "news" else a.kind
         row = (
-            url_hash, title_hash, a.title, a.url, a.source, a.kind,
+            url_hash, title_hash, a.title, a.url, a.source, kind,
             a.published, now,
-            sentiment.score(a.title),
+            sent_info["score"],
             json.dumps([m.__dict__ for m in matches]),
             json.dumps(themes.tag(a.title)),
         )
@@ -106,11 +108,30 @@ def export_window(conn: sqlite3.Connection, max_age_days: int = 400) -> list[dic
     rows = conn.execute(
         "SELECT title, url, source, kind, published, sentiment, tickers, themes"
         " FROM articles WHERE published >= ? ORDER BY published DESC", (cutoff,))
+    raw = list(rows)
+
+    # Collect all matched tickers, fetch their cap tiers in one cached pass.
+    from . import marketcap, themes as themes_mod
+    all_tickers = set()
+    for r in raw:
+        for m in json.loads(r[6]):
+            all_tickers.add(m["ticker"])
+    tiers = {}
+    try:
+        tiers = marketcap.tier_only(sorted(all_tickers)) if all_tickers else {}
+    except Exception as e:
+        print(f"  [warn] market-cap fetch skipped: {e}")
+
     out = []
-    for title, url, source, kind, published, sent, tickers, theme_list in rows:
+    for title, url, source, kind, published, sent, tickers, theme_list in raw:
+        tks = json.loads(tickers)
+        for m in tks:
+            m["tier"] = tiers.get(m["ticker"], "unknown")
+        ths = json.loads(theme_list)
+        lenses = sorted({themes_mod.lens_for(t) for t in ths}) if ths else []
         out.append({
             "t": title, "u": url, "s": source, "k": kind, "p": published,
             "sn": round(sent, 3),
-            "tk": json.loads(tickers), "th": json.loads(theme_list),
+            "tk": tks, "th": ths, "ln": lenses,
         })
     return out
