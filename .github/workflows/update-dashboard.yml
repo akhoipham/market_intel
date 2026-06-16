@@ -2,9 +2,12 @@ name: Update dashboard
 
 on:
   schedule:
-    # Every 20 minutes, 13:00-23:59 UTC, Mon-Fri (covers US/Canada market
-    # hours incl. pre/post). GitHub cron is UTC and best-effort.
-    - cron: "*/20 13-23 * * 1-5"
+    # Every 10 minutes, 24/7. Public repos get unlimited Actions minutes, so
+    # there is no cost reason to restrict to market hours; round-the-clock keeps
+    # the dashboard's "data age" fresh whenever anyone checks (incl. evenings,
+    # weekends, and non-US timezones). GitHub cron is UTC and best-effort —
+    # high-frequency schedules get throttled, so */10 is more reliable than */5.
+    - cron: "*/10 * * * *"
     # Weekly SEC ticker refresh trigger (Sunday 06:00 UTC)
     - cron: "0 6 * * 0"
   workflow_dispatch: {}   # lets you run it manually from the Actions tab
