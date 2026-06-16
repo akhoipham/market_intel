@@ -7,9 +7,6 @@
     {"tier": "primary", "name": "Bloomberg — Economics",       "url": "https://feeds.bloomberg.com/economics/news.rss"},
     {"tier": "primary", "name": "Bloomberg — Industries",      "url": "https://feeds.bloomberg.com/industries/news.rss"},
     {"tier": "primary", "name": "Bloomberg — Politics",        "url": "https://feeds.bloomberg.com/politics/news.rss"},
-    {"tier": "primary", "name": "Bloomberg — GNews Markets",   "url": "https://news.google.com/rss/search?q=site:bloomberg.com+markets+when:12h&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "primary", "name": "Bloomberg — GNews Tech",      "url": "https://news.google.com/rss/search?q=site:bloomberg.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "primary", "name": "Bloomberg — GNews Finance",   "url": "https://news.google.com/rss/search?q=site:bloomberg.com+finance+when:12h&hl=en-US&gl=US&ceid=US:en"},
 
     {"tier": "primary", "name": "Reuters — Top News",          "url": "https://feeds.reuters.com/reuters/topNews"},
     {"tier": "primary", "name": "Reuters — Business",          "url": "https://feeds.reuters.com/reuters/businessNews"},
