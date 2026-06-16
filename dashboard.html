@@ -51,7 +51,6 @@ a:hover .hl-title{color:var(--amber)}
 .selctl{background:var(--panel);border:1px solid var(--line);border-radius:3px;
   color:var(--text);font:.76rem var(--mono);padding:.42rem .55rem;cursor:pointer}
 .selctl:hover{border-color:var(--amber-dim)}
-.selctl-src{min-width:11rem}
 .chkctl{display:flex;align-items:center;gap:.35rem;font-size:.72rem;
   color:var(--dim);cursor:pointer;user-select:none}
 .chkctl input{accent-color:var(--amber);cursor:pointer}
@@ -170,7 +169,6 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
     <option value="small">Small $300M–2B</option>
     <option value="micro">Micro &lt;$300M</option>
   </select>
-  <select class="selctl selctl-src" id="src" aria-label="Source"></select>
   <input class="search" id="q" type="search" placeholder="filter: ticker, company, keyword…" aria-label="Filter">
   <div class="kpis">
     <div><b id="k-tickers">–</b>tickers mentioned</div>
@@ -238,11 +236,9 @@ const ago = p => {
 };
 
 const S = {range:86400, fromDate:null, toDate:null, theme:null, ticker:null, q:"",
-           sortK:"n", sortDir:-1, lens:"", cap:"", sent:null, feed:"news", src:null};
+           sortK:"n", sortDir:-1, lens:"", cap:"", sent:null, feed:"news"};
 
 const isInsider = a => a.k==="filing" && /^Form 4/.test(a.t);
-const domain = a => { try{ return new URL(a.u).hostname.replace(/^www\./,""); }catch{ return a.s; } };
-function passSrc(a){ return !S.src || domain(a)===S.src; }
 
 // ── data loading ────────────────────────────────────────────────────────────
 const DATA_URL = "./data.json";
@@ -310,7 +306,7 @@ function passSent(a){
 }
 function passFeed(a){ return S.feed==="insider" ? isInsider(a) : !isInsider(a); }
 function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)
-  &&passCap(a)&&passSent(a)&&passFeed(a)&&passSrc(a)
+  &&passCap(a)&&passSent(a)&&passFeed(a)
   &&(!S.theme||a.th.includes(S.theme))
   &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
@@ -346,16 +342,6 @@ function render(){
   ["bull","bear","flat","opinion"].forEach(k=>{
     const id={bull:"f-bull",bear:"f-bear",flat:"f-flat",opinion:"f-op"}[k];
     $(id).classList.toggle("on",S.sent===k); });
-
-  // source dropdown — rebuild from domains present in current window
-  const srcCounts={};
-  DATA.filter(a=>inWindow(a)&&passFeed(a)).forEach(a=>{ const d=domain(a); srcCounts[d]=(srcCounts[d]||0)+1; });
-  const srcSel=$("src");
-  const prevSrc=srcSel.value;
-  srcSel.innerHTML=`<option value="">filter by source…</option>`
-    +Object.entries(srcCounts).sort((a,b)=>b[1]-a[1])
-    .map(([d,n])=>`<option value="${esc(d)}"${S.src===d?" selected":""}>${esc(d)} (${n})</option>`).join("");
-  if(S.src && !srcCounts[S.src]){ S.src=null; srcSel.value=""; } // clear stale selection
 
   // theme tape
   const base = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
@@ -442,7 +428,6 @@ $("to").addEventListener("change", onDate);
 $("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
 $("lens").addEventListener("change", e=>{ S.lens=e.target.value; render(); });
 $("cap").addEventListener("change", e=>{ S.cap=e.target.value; render(); });
-$("src").addEventListener("change", e=>{ S.src=e.target.value||null; render(); });
 // sentiment filters (clickable KPIs)
 document.querySelector(".kpis").addEventListener("click", e=>{
   const b=e.target.closest(".kpi"); if(!b) return;
