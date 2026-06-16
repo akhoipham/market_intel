@@ -330,3 +330,19 @@ LEN,NYSE,Lennar Corporation,Lennar,Consumer Discretionary,0
 DHI,NYSE,D.R. Horton,DR Horton|D.R. Horton,Consumer Discretionary,0
 PHM,NYSE,PulteGroup Inc.,PulteGroup|Pulte,Consumer Discretionary,0
 TOL,NYSE,Toll Brothers,Toll Brothers,Consumer Discretionary,0
+NWS,NASDAQ,News Corporation Class B,News Corp Class B,Communication Services,0
+NWSA,NASDAQ,News Corporation Class A,News Corp Class A,Communication Services,0
+T-CA,TSX,Telus Corporation,Telus,Communication Services,0
+SAP-CA,TSX,Saputo Inc.,Saputo,Consumer Staples,0
+PPL-CA,TSX,Pembina Pipeline Corporation,Pembina Pipeline|Pembina,Energy,0
+H-CA,TSX,Hydro One Limited,Hydro One,Utilities,0
+POW,TSX,Power Corporation of Canada,,Financials,0
+FFH,TSX,Fairfax Financial Holdings,Fairfax,Financials,0
+TECK.B,TSX,Teck Resources,Teck,Materials,0
+FM,TSX,First Quantum Minerals,,Materials,0
+WSP,TSX,WSP Global,,Industrials,0
+BIP.UN,TSX,Brookfield Infrastructure Partners,Brookfield Infrastructure,Utilities,0
+GIB.A,TSX,CGI Inc.,CGI,Technology,0
+WN,TSX,George Weston Limited,George Weston,Consumer Staples,0
+CCL.B,TSX,CCL Industries,CCL,Materials,0
+CTC.A,TSX,Canadian Tire Corporation,Canadian Tire,Consumer Discretionary,0
