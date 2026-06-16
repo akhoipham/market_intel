@@ -29,14 +29,6 @@ a:hover .hl-title{color:var(--amber)}
 .brand span{color:var(--text)}
 .statusbar .meta{color:var(--dim);font-size:.72rem}
 .statusbar .meta b{color:var(--text);font-weight:500}
-.live-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;
-  padding:.18rem .5rem;border-radius:2px;border:1px solid var(--line);
-  color:var(--dim);margin-left:.5rem;vertical-align:middle}
-.live-badge .dot{width:.45rem;height:.45rem;border-radius:50%;
-  background:var(--bull);flex:0 0 auto}
-.live-badge.pulse .dot{animation:livepulse 1s ease-out}
-.live-badge.updated{border-color:var(--amber-dim);color:var(--amber)}
-@keyframes livepulse{0%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}100%{opacity:1;transform:scale(1)}}
 
 .controls{display:flex;align-items:center;gap:1rem;padding:.8rem 1.4rem;flex-wrap:wrap}
 .ranges{display:flex;border:1px solid var(--line);border-radius:3px;overflow-x:auto;max-width:100%}
@@ -64,6 +56,15 @@ a:hover .hl-title{color:var(--amber)}
 .chkctl input{accent-color:var(--amber);cursor:pointer}
 .kpis{display:flex;gap:1.4rem;margin-left:auto;font-size:.72rem;color:var(--dim)}
 .kpis b{display:block;font-size:1.05rem;color:var(--text);font-weight:600}
+.kpi{background:none;border:0;border-bottom:2px solid transparent;color:var(--dim);
+  font:inherit;cursor:pointer;padding:0 0 .15rem;text-align:left}
+.kpi:hover{color:var(--text)}
+.kpi.on{border-bottom-color:var(--amber)}
+.feedtabs{display:inline-flex;margin-left:.6rem;border:1px solid var(--line);border-radius:3px;vertical-align:middle}
+.feedtabs button{background:transparent;border:0;border-right:1px solid var(--line);
+  color:var(--dim);font:600 .6rem var(--mono);letter-spacing:.1em;padding:.25rem .6rem;cursor:pointer;text-transform:uppercase}
+.feedtabs button:last-child{border-right:0}
+.feedtabs button.on{background:var(--amber);color:#0a0c10}
 
 .tape-label{padding:.2rem 1.4rem 0;font-size:.62rem;letter-spacing:.18em;color:var(--faint)}
 .tape{display:flex;gap:.45rem;overflow-x:auto;padding:.55rem 1.4rem .9rem;
@@ -147,16 +148,13 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
   <div class="meta">north american equities · thematic news intelligence</div>
   <div class="meta" style="margin-left:auto">
     data as of <b id="asof">loading…</b> <span class="age" id="age"></span> · <b id="total-n">–</b> headlines in window
-    <span class="live-badge" id="live-badge">
-      <span class="dot" id="live-dot"></span>
-      <span id="live-label">connecting…</span>
-    </span>
   </div>
 </div>
 
 <div class="controls">
   <div class="ranges" id="ranges" role="tablist" aria-label="Time range"></div>
-  <label class="datectl">from <input type="date" id="since" aria-label="From date"></label>
+  <label class="datectl">from <input type="date" id="from" aria-label="From date">
+    to <input type="date" id="to" aria-label="To date"></label>
   <select class="selctl" id="lens" aria-label="Lens">
     <option value="">all lenses</option>
     <option value="Markets">Markets</option>
@@ -171,12 +169,13 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
     <option value="small">Small $300M–2B</option>
     <option value="micro">Micro &lt;$300M</option>
   </select>
-  <label class="chkctl"><input type="checkbox" id="hide-opinion"> hide opinion</label>
   <input class="search" id="q" type="search" placeholder="filter: ticker, company, keyword…" aria-label="Filter">
   <div class="kpis">
     <div><b id="k-tickers">–</b>tickers mentioned</div>
-    <div><b id="k-bull" class="bull">–</b>bullish</div>
-    <div><b id="k-bear" class="bear">–</b>bearish</div>
+    <button class="kpi" id="f-bull" data-sent="bull"><b class="bull">–</b>bullish</button>
+    <button class="kpi" id="f-bear" data-sent="bear"><b class="bear">–</b>bearish</button>
+    <button class="kpi" id="f-flat" data-sent="flat"><b class="flat">–</b>neutral</button>
+    <button class="kpi" id="f-op" data-sent="opinion"><b>–</b>opinion</button>
   </div>
 </div>
 
@@ -200,7 +199,12 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
     <div class="empty" id="tk-empty" hidden>No ticker mentions in this window. Widen the range or clear filters.</div>
   </section>
   <section class="pane">
-    <h2>Headline Tape <span id="hl-count" style="color:var(--faint)"></span></h2>
+    <h2>Headline Tape <span id="hl-count" style="color:var(--faint)"></span>
+      <span class="feedtabs" id="feedtabs" role="tablist">
+        <button data-feed="news" class="on" role="tab">News</button>
+        <button data-feed="insider" role="tab">Insider</button>
+      </span>
+    </h2>
     <div class="scrollbox" id="hl-scroll"><div id="hl-list"></div></div>
     <div class="empty" id="hl-empty" hidden>No headlines match. Widen the range or clear filters.</div>
   </section>
@@ -231,18 +235,17 @@ const ago = p => {
   return Math.round(d/2592000)+"mo";
 };
 
-const S = {range:86400, sinceDate:null, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1,
-           lens:"", cap:"", hideOpinion:false};
+const S = {range:86400, fromDate:null, toDate:null, theme:null, ticker:null, q:"",
+           sortK:"n", sortDir:-1, lens:"", cap:"", sent:null, feed:"news"};
+
+const isInsider = a => a.k==="filing" && /^Form 4/.test(a.t);
 
 // ── data loading ────────────────────────────────────────────────────────────
 const DATA_URL = "./data.json";
 const IS_LOCAL = location.protocol === "file:";
 
 async function loadData() {
-  if (IS_LOCAL) {
-    $("live-label").textContent = "local mode — open via server for live refresh";
-    return;
-  }
+  if (IS_LOCAL) { refreshAge(); return; }
   try {
     const resp = await fetch(DATA_URL + "?_=" + Date.now());
     if (!resp.ok) throw new Error("HTTP " + resp.status);
@@ -251,29 +254,13 @@ async function loadData() {
     BUILT = json.built   || Math.floor(Date.now()/1000);
     secsLeft = REFRESH_S;
     render();
-    flashUpdated();
-    firstLoad = false;
   } catch(e) {
     console.warn("data.json fetch failed:", e);
-    $("live-label").textContent = "fetch error — retrying…";
   }
 }
 
-function flashUpdated() {
-  const badge = $("live-badge");
-  $("live-label").textContent = firstLoad ? "live" : "↻ updated";
-  badge.classList.add("updated");
-  setTimeout(() => { badge.classList.remove("updated"); updateCountdown(); }, 1800);
-}
-
-function updateCountdown() {
-  if (IS_LOCAL) return;
-  const m = Math.floor(secsLeft/60), s = secsLeft%60;
-  $("live-label").textContent = "refresh in " + m + ":" + String(s).padStart(2,"0");
-}
-
-// How old is the underlying data? Browser re-checks every 2 min, but the feed
-// only regenerates server-side periodically, so surface the real age + warn.
+// How old is the underlying data? The browser re-checks periodically, but the
+// feed only regenerates server-side on the cron, so surface the real age + warn.
 function refreshAge() {
   if (!BUILT) return;
   const sec = Math.max(0, Math.floor(Date.now()/1000) - BUILT);
@@ -286,25 +273,21 @@ function refreshAge() {
   el.className = "age" + (sec > 5400 ? " stale" : sec > 1500 ? " warn" : "");
 }
 
-// tick every second: decrement countdown, trigger fetch when it hits 0
+// silent background refresh; no on-page countdown
 setInterval(() => {
   secsLeft = Math.max(0, secsLeft - 1);
   refreshAge();
-  if (secsLeft === 0) { loadData(); secsLeft = REFRESH_S; return; }
-  // only update label when badge isn't showing "updated" flash
-  if (!$("live-badge").classList.contains("updated")) updateCountdown();
-  // pulse the dot every 10s as a heartbeat
-  if (secsLeft % 10 === 0) {
-    const badge = $("live-badge");
-    badge.classList.add("pulse");
-    setTimeout(() => badge.classList.remove("pulse"), 1000);
-  }
+  if (secsLeft === 0) { loadData(); secsLeft = REFRESH_S; }
 }, 1000);
 
 // ── render ──────────────────────────────────────────────────────────────────
 function inWindow(a){
-  if (S.sinceDate) return a.p >= S.sinceDate;   // calendar: everything since chosen date 00:00
-  return BUILT - a.p <= S.range;                 // quick toggle: relative window
+  if (S.fromDate || S.toDate){                 // explicit date range filter
+    if (S.fromDate && a.p < S.fromDate) return false;
+    if (S.toDate   && a.p > S.toDate)   return false;
+    return true;
+  }
+  return BUILT - a.p <= S.range;               // quick toggle
 }
 function passText(a){
   if(!S.q) return true; const q = S.q.toLowerCase();
@@ -313,9 +296,17 @@ function passText(a){
 }
 function passLens(a){ return !S.lens || (a.ln||[]).includes(S.lens); }
 function passCap(a){ return !S.cap || a.tk.some(m=>m.tier===S.cap); }
-function passOpinion(a){ return !S.hideOpinion || a.k!=="opinion"; }
+function passSent(a){
+  if(!S.sent) return true;
+  if(S.sent==="opinion") return a.k==="opinion";
+  if(a.k==="opinion") return false;            // opinion pieces excluded from bull/bear/flat
+  if(S.sent==="bull") return a.sn>=.25;
+  if(S.sent==="bear") return a.sn<=-.25;
+  return a.sn>-.25 && a.sn<.25;                // flat / neutral
+}
+function passFeed(a){ return S.feed==="insider" ? isInsider(a) : !isInsider(a); }
 function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)
-  &&passCap(a)&&passOpinion(a)
+  &&passCap(a)&&passSent(a)&&passFeed(a)
   &&(!S.theme||a.th.includes(S.theme))
   &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
@@ -324,27 +315,37 @@ function render(){
     ["1W",604800],["1M",2592000]];
 
   // rebuild range buttons only on first render or BUILT change
+  const dateActive = !!(S.fromDate||S.toDate);
   if (!$("ranges").dataset.built || $("ranges").dataset.built !== String(BUILT)) {
     $("ranges").dataset.built = BUILT;
     $("ranges").innerHTML = RANGES.map(([l,s])=>
-      `<button data-s="${s}" class="${(!S.sinceDate&&s===S.range)?"on":""}" role="tab">${l}</button>`).join("");
-    // cap the date picker at the data's build day — no future dates
-    $("since").max = new Date(BUILT*1000).toISOString().slice(0,10);
+      `<button data-s="${s}" class="${(!dateActive&&s===S.range)?"on":""}" role="tab">${l}</button>`).join("");
+    const dmax = new Date(BUILT*1000).toISOString().slice(0,10);  // no future dates
+    $("from").max = dmax; $("to").max = dmax;
   }
 
   $("asof").textContent = BUILT ? new Date(BUILT*1000).toLocaleString() : "–";
   refreshAge();
-  $("total-n").textContent = DATA.filter(inWindow).length;
+  $("total-n").textContent = DATA.filter(a=>inWindow(a)&&passFeed(a)).length;
 
   const win = visible();
   const winNoTk = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
-    &&passOpinion(a)&&(!S.theme||a.th.includes(S.theme)));
-  $("k-bull").textContent = win.filter(a=>a.sn>=.25).length;
-  $("k-bear").textContent = win.filter(a=>a.sn<=-.25).length;
+    &&passSent(a)&&passFeed(a)&&(!S.theme||a.th.includes(S.theme)));
+  // KPI counts are over the window (ignoring the active sentiment filter so the
+  // tallies stay stable as you toggle them)
+  const kbase = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)&&passFeed(a)
+    &&(!S.theme||a.th.includes(S.theme))&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
+  $("f-bull").firstElementChild.textContent = kbase.filter(a=>a.k!=="opinion"&&a.sn>=.25).length;
+  $("f-bear").firstElementChild.textContent = kbase.filter(a=>a.k!=="opinion"&&a.sn<=-.25).length;
+  $("f-flat").firstElementChild.textContent = kbase.filter(a=>a.k!=="opinion"&&a.sn>-.25&&a.sn<.25).length;
+  $("f-op").firstElementChild.textContent   = kbase.filter(a=>a.k==="opinion").length;
+  ["bull","bear","flat","opinion"].forEach(k=>{
+    const id={bull:"f-bull",bear:"f-bear",flat:"f-flat",opinion:"f-op"}[k];
+    $(id).classList.toggle("on",S.sent===k); });
 
   // theme tape
   const base = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
-    &&passOpinion(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
+    &&passSent(a)&&passFeed(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
   const tstat={};
   for(const a of base) for(const th of a.th){
     (tstat[th]||={n:0,s:0}); tstat[th].n++; tstat[th].s+=a.sn; }
@@ -409,25 +410,33 @@ function render(){
 }
 
 // ── event wiring ────────────────────────────────────────────────────────────
+function clearDates(){ S.fromDate=S.toDate=null; $("from").value=""; $("to").value=""; }
 $("ranges").addEventListener("click", e=>{
   const b=e.target.closest("button"); if(!b) return;
-  S.range=+b.dataset.s; S.sinceDate=null; $("since").value="";   // quick toggle overrides calendar
+  S.range=+b.dataset.s; clearDates();                 // quick toggle overrides the date range
   document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",x===b));
   render(); });
-$("since").addEventListener("change", e=>{
-  const v=e.target.value;
-  if(v){
-    S.sinceDate=Math.floor(new Date(v+"T00:00:00").getTime()/1000);  // local midnight of chosen day
-    document.querySelectorAll("#ranges button").forEach(x=>x.classList.remove("on"));
-  } else {
-    S.sinceDate=null;  // cleared → fall back to the active quick toggle
-    document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",+x.dataset.s===S.range));
-  }
-  render(); });
+function onDate(){
+  const fv=$("from").value, tv=$("to").value;
+  S.fromDate = fv ? Math.floor(new Date(fv+"T00:00:00").getTime()/1000) : null;
+  S.toDate   = tv ? Math.floor(new Date(tv+"T23:59:59").getTime()/1000) : null;  // inclusive end of day
+  if(S.fromDate||S.toDate) document.querySelectorAll("#ranges button").forEach(x=>x.classList.remove("on"));
+  else document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",+x.dataset.s===S.range));
+  render(); }
+$("from").addEventListener("change", onDate);
+$("to").addEventListener("change", onDate);
 $("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
 $("lens").addEventListener("change", e=>{ S.lens=e.target.value; render(); });
 $("cap").addEventListener("change", e=>{ S.cap=e.target.value; render(); });
-$("hide-opinion").addEventListener("change", e=>{ S.hideOpinion=e.target.checked; render(); });
+// sentiment filters (clickable KPIs)
+document.querySelector(".kpis").addEventListener("click", e=>{
+  const b=e.target.closest(".kpi"); if(!b) return;
+  S.sent = S.sent===b.dataset.sent ? null : b.dataset.sent; render(); });
+$("feedtabs").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  S.feed=b.dataset.feed;
+  document.querySelectorAll("#feedtabs button").forEach(x=>x.classList.toggle("on",x===b));
+  render(); });
 $("tape").addEventListener("click", e=>{
   const c=e.target.closest(".chip"); if(!c) return;
   S.theme=S.theme===c.dataset.th?null:c.dataset.th; render(); });
