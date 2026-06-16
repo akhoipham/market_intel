@@ -17,11 +17,12 @@ permissions:
 
 concurrency:
   group: update-dashboard
-  cancel-in-progress: false
+  cancel-in-progress: true   # a hung run must never permanently block the schedule
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 5   # normal runs take 30-55s; this bounds any hang hard
     steps:
       - uses: actions/checkout@v4
 
