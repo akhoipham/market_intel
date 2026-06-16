@@ -2,13 +2,11 @@ name: Update dashboard
 
 on:
   schedule:
-    # GitHub explicitly documents that scheduled workflows are best-effort and
-    # get delayed most at the top of every hour/interval, since every repo's
-    # cron targets :00/:15/:30/:45 simultaneously. Offsetting to :04/:19/:34/:49
-    # queues behind less contention. Still no guarantee — see README for the
-    # external-cron (cron-job.org -> workflow_dispatch) fallback if this still
-    # drifts past ~20 min.
-    - cron: "4,19,34,49 * * * *"
+    # On the hour, exactly, as requested. Note: GitHub's docs flag :00 as the
+    # single most congested minute-mark for cron scheduling (every repo's
+    # hourly/daily jobs target it too) — a marginally higher delay risk than
+    # an offset minute, but the actual difference is small and unproven here.
+    - cron: "0 * * * *"
     - cron: "0 6 * * 0"          # Weekly SEC ticker refresh (Sunday 06:00 UTC)
   workflow_dispatch: {}          # manual + external-cron trigger
 
