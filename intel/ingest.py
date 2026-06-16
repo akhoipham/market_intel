@@ -24,7 +24,7 @@ DATA_DIR  = Path(__file__).resolve().parent.parent / "data"
 FEEDS_JSON = DATA_DIR / "feeds.json"
 
 UA = {"User-Agent": "market-intel-prototype/0.2 (personal research; contact@example.com)"}
-RSS_WORKERS = 10   # concurrent RSS fetches
+RSS_WORKERS = 20   # concurrent RSS fetches — bumped for larger feed list
 RSS_TIMEOUT = 12   # seconds per feed (slightly tighter to fail fast on dead feeds)
 
 
@@ -45,13 +45,16 @@ def _entry_time(entry) -> int:
     return int(time.time())
 
 
-def fetch_rss(name: str, url: str, timeout: int = RSS_TIMEOUT) -> list[Article]:
+def fetch_rss(name: str, url: str, tier: str = "secondary",
+              timeout: int = RSS_TIMEOUT) -> list[Article]:
     try:
         resp = requests.get(url, headers=UA, timeout=timeout)
         resp.raise_for_status()
         parsed = feedparser.parse(resp.content)
     except Exception as e:
-        print(f"  [warn] {name}: {type(e).__name__}: {e}")
+        # Only log failures for primary/wire feeds; suppress noisy opinion-tier warns
+        if tier != "opinion":
+            print(f"  [warn] {name}: {type(e).__name__}: {e}")
         return []
     out = []
     for entry in parsed.entries:
@@ -100,7 +103,8 @@ def fetch_all(feeds_path: Path = FEEDS_JSON) -> list[Article]:
     articles: list[Article] = []
     t0 = time.time()
     with ThreadPoolExecutor(max_workers=min(RSS_WORKERS, len(feeds))) as ex:
-        futures = {ex.submit(fetch_rss, f["name"], f["url"]): f["name"]
+        futures = {ex.submit(fetch_rss, f["name"], f["url"],
+                             f.get("tier", "secondary")): f["name"]
                    for f in feeds}
         for future in as_completed(futures):
             name = futures[future]
