@@ -65,6 +65,13 @@ a:hover .hl-title{color:var(--amber)}
 .ranges button:last-child{border-right:0}
 .ranges button:hover{color:var(--text)}
 .ranges button.on{background:var(--amber);color:#0a0c10}
+.datectl{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--dim)}
+.datectl input{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  color:var(--text);font:.74rem var(--mono);padding:.38rem .5rem;cursor:pointer;color-scheme:dark}
+.datectl input:hover{border-color:var(--amber-dim)}
+.age{font-size:.62rem;color:var(--faint)}
+.age.warn{color:var(--amber)}
+.age.stale{color:var(--bear)}
 .search{flex:1;min-width:180px;max-width:340px;background:var(--panel);
   border:1px solid var(--line);border-radius:3px;color:var(--text);
   font:.8rem var(--mono);padding:.45rem .7rem}
@@ -96,6 +103,12 @@ a:hover .hl-title{color:var(--amber)}
 .pane{background:var(--bg);min-height:60vh}
 .pane h2{font-family:var(--sans);font-stretch:85%;font-weight:700;font-size:.72rem;
   letter-spacing:.16em;color:var(--dim);padding:.85rem 1.2rem .5rem;text-transform:uppercase}
+/* scrollable windows: cap each list so the page doesn't grow unbounded */
+.scrollbox{max-height:34rem;overflow-y:auto;overflow-x:hidden}
+.scrollbox::-webkit-scrollbar{width:8px}
+.scrollbox::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.scrollbox::-webkit-scrollbar-track{background:transparent}
+#tk-table thead th{position:sticky;top:0;background:var(--bg);z-index:2}
 
 table{width:100%;border-collapse:collapse;font-size:.78rem}
 th{font-size:.62rem;letter-spacing:.12em;color:var(--faint);text-align:left;
@@ -153,7 +166,7 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
   <div class="brand">SIGNAL<span>/DESK</span></div>
   <div class="meta">north american equities · thematic news intelligence</div>
   <div class="meta" style="margin-left:auto">
-    data as of <b id="asof">loading…</b> · <b id="total-n">–</b> headlines in window
+    data as of <b id="asof">loading…</b> <span class="age" id="age"></span> · <b id="total-n">–</b> headlines in window
     <span class="live-badge" id="live-badge">
       <span class="dot" id="live-dot"></span>
       <span id="live-label">connecting…</span>
@@ -163,6 +176,7 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 
 <div class="controls">
   <div class="ranges" id="ranges" role="tablist" aria-label="Time range"></div>
+  <label class="datectl">from <input type="date" id="since" aria-label="From date"></label>
   <select class="selctl" id="lens" aria-label="Lens">
     <option value="">all lenses</option>
     <option value="Markets">Markets</option>
@@ -192,6 +206,7 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 <div class="grid">
   <section class="pane">
     <h2>Ticker Leaderboard</h2>
+    <div class="scrollbox" id="tk-scroll">
     <table id="tk-table">
       <thead><tr>
         <th data-k="ticker">SYM</th><th>COMPANY</th>
@@ -201,11 +216,12 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
       </tr></thead>
       <tbody id="tk-body"></tbody>
     </table>
+    </div>
     <div class="empty" id="tk-empty" hidden>No ticker mentions in this window. Widen the range or clear filters.</div>
   </section>
   <section class="pane">
     <h2>Headline Tape <span id="hl-count" style="color:var(--faint)"></span></h2>
-    <div id="hl-list"></div>
+    <div class="scrollbox" id="hl-scroll"><div id="hl-list"></div></div>
     <div class="empty" id="hl-empty" hidden>No headlines match. Widen the range or clear filters.</div>
   </section>
 </div>
@@ -213,7 +229,7 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
 <footer>
   live · sources: public RSS wires + SEC EDGAR · sentiment: lexicon (headline-level) ·
   matching: cashtag → exchange tag → curated name/alias with ambiguity guard ·
-  auto-refreshes every 2 min without page reload
+  browser re-checks for new data every 2 min; the feed itself regenerates server-side on a schedule
 </footer>
 
 <script>
@@ -235,7 +251,7 @@ const ago = p => {
   return Math.round(d/2592000)+"mo";
 };
 
-const S = {range:86400, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1,
+const S = {range:86400, sinceDate:null, theme:null, ticker:null, q:"", sortK:"n", sortDir:-1,
            lens:"", cap:"", hideOpinion:false};
 
 // ── data loading ────────────────────────────────────────────────────────────
@@ -276,9 +292,24 @@ function updateCountdown() {
   $("live-label").textContent = "refresh in " + m + ":" + String(s).padStart(2,"0");
 }
 
+// How old is the underlying data? Browser re-checks every 2 min, but the feed
+// only regenerates server-side periodically, so surface the real age + warn.
+function refreshAge() {
+  if (!BUILT) return;
+  const sec = Math.max(0, Math.floor(Date.now()/1000) - BUILT);
+  let txt;
+  if (sec < 90)        txt = "just now";
+  else if (sec < 3600) txt = Math.round(sec/60) + " min old";
+  else                 txt = (sec/3600).toFixed(1) + " h old";
+  const el = $("age");
+  el.textContent = "· " + txt;
+  el.className = "age" + (sec > 5400 ? " stale" : sec > 1500 ? " warn" : "");
+}
+
 // tick every second: decrement countdown, trigger fetch when it hits 0
 setInterval(() => {
   secsLeft = Math.max(0, secsLeft - 1);
+  refreshAge();
   if (secsLeft === 0) { loadData(); secsLeft = REFRESH_S; return; }
   // only update label when badge isn't showing "updated" flash
   if (!$("live-badge").classList.contains("updated")) updateCountdown();
@@ -291,7 +322,10 @@ setInterval(() => {
 }, 1000);
 
 // ── render ──────────────────────────────────────────────────────────────────
-function inWindow(a){ return BUILT - a.p <= S.range; }
+function inWindow(a){
+  if (S.sinceDate) return a.p >= S.sinceDate;   // calendar: everything since chosen date 00:00
+  return BUILT - a.p <= S.range;                 // quick toggle: relative window
+}
 function passText(a){
   if(!S.q) return true; const q = S.q.toLowerCase();
   return a.t.toLowerCase().includes(q) ||
@@ -306,19 +340,20 @@ function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)
   &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
 function render(){
-  const YTD_S = (() => { const d=new Date(BUILT*1000);
-    return Math.max(86400,Math.round(BUILT-new Date(d.getFullYear(),0,1).getTime()/1000)); })();
-  const RANGES=[["1H",3600],["8H",28800],["1D",86400],["3D",259200],["1W",604800],
-    ["1M",2592000],["3M",7776000],["6M",15552000],["YTD",YTD_S],["1Y",31536000]];
+  const RANGES=[["1H",3600],["4H",14400],["8H",28800],["1D",86400],
+    ["1W",604800],["1M",2592000]];
 
   // rebuild range buttons only on first render or BUILT change
   if (!$("ranges").dataset.built || $("ranges").dataset.built !== String(BUILT)) {
     $("ranges").dataset.built = BUILT;
     $("ranges").innerHTML = RANGES.map(([l,s])=>
-      `<button data-s="${s}" class="${s===S.range?"on":""}" role="tab">${l}</button>`).join("");
+      `<button data-s="${s}" class="${(!S.sinceDate&&s===S.range)?"on":""}" role="tab">${l}</button>`).join("");
+    // cap the date picker at the data's build day — no future dates
+    $("since").max = new Date(BUILT*1000).toISOString().slice(0,10);
   }
 
   $("asof").textContent = BUILT ? new Date(BUILT*1000).toLocaleString() : "–";
+  refreshAge();
   $("total-n").textContent = DATA.filter(inWindow).length;
 
   const win = visible();
@@ -396,8 +431,18 @@ function render(){
 // ── event wiring ────────────────────────────────────────────────────────────
 $("ranges").addEventListener("click", e=>{
   const b=e.target.closest("button"); if(!b) return;
-  S.range=+b.dataset.s;
+  S.range=+b.dataset.s; S.sinceDate=null; $("since").value="";   // quick toggle overrides calendar
   document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",x===b));
+  render(); });
+$("since").addEventListener("change", e=>{
+  const v=e.target.value;
+  if(v){
+    S.sinceDate=Math.floor(new Date(v+"T00:00:00").getTime()/1000);  // local midnight of chosen day
+    document.querySelectorAll("#ranges button").forEach(x=>x.classList.remove("on"));
+  } else {
+    S.sinceDate=null;  // cleared → fall back to the active quick toggle
+    document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("on",+x.dataset.s===S.range));
+  }
   render(); });
 $("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
 $("lens").addEventListener("change", e=>{ S.lens=e.target.value; render(); });

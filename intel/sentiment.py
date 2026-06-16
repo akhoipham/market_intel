@@ -53,6 +53,19 @@ POSITIVE = {
     "recovery": 1, "recovers": 1, "recovered": 1, "improve": 1, "improves": 1,
     "improved": 1, "improving": 1, "broadening": 1, "broadens": 1, "tailwind": 2,
     "tailwinds": 2, "raises guidance": 3, "beat estimates": 3,
+    # market-level upside moves (were missing — "Chip Stocks Soaring to New
+    # Highs" scored flat-neutral because "soaring"/"highs" weren't in the lexicon)
+    "soaring": 2, "record high": 2, "record highs": 2, "new high": 2,
+    "new highs": 2, "all-time high": 2, "all-time highs": 2, "fresh highs": 2,
+    "52-week high": 1,
+    # guidance / outlook raises (only "raises guidance" existed; "-ing" and
+    # "outlook"/"forecast" variants were missed, e.g. "Raising ... Outlook")
+    "raising": 1, "raises outlook": 3, "raising guidance": 3, "raising outlook": 3,
+    "raised guidance": 3, "raised outlook": 3, "lifts guidance": 3,
+    "lifts outlook": 3, "boosts guidance": 3, "boosts outlook": 3,
+    "hikes guidance": 3, "raises forecast": 3, "ups guidance": 3,
+    "tops estimates": 3, "beats estimates": 3, "above estimates": 2,
+    "tops expectations": 2,
 }
 
 NEGATIVE = {
@@ -89,7 +102,11 @@ NEGATIVE = {
     "bans": 1, "banned": 2, "rejects": 2, "rejected": 2, "reject": 2,
     "fails": 2, "fail": 1, "failed": 2, "failure": 2, "shutdown": 2,
     "resigns": 1, "resigned": 1, "departs": 1, "departed": 1, "exits": 1,
-    "exited": 1, "dilution": 2, "risk": 1, "risks": 1, "risky": 2, "threat": 1,
+    "exited": 1, "dilution": 2, "risky": 2, "threat": 1,
+    # NOTE: bare "risk"/"risks" intentionally NOT listed — they are neutral in
+    # finance ("risk rating", "risk management", "risk-adjusted", "de-risk").
+    # Genuinely negative usages ("downside risk") are caught by phrases below.
+    "downside risk": 2, "regulatory risk": 1, "risk-off": 2,
     "threats": 1, "threatens": 1, "headwind": 2, "headwinds": 2, "pressure": 1,
     "pressures": 1, "pressured": 1, "struggle": 2, "struggles": 2,
     "struggled": 2, "struggling": 2, "woes": 2, "slowdown": 2, "slowing": 1,
