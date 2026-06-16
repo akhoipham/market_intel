@@ -2,13 +2,13 @@ name: Update dashboard
 
 on:
   schedule:
-    # NOTE: GitHub runs scheduled jobs best-effort and throttles/drops high-
-    # frequency crons. */10 is requested but in practice fires more like every
-    # 20-60 min, and can pause entirely. For real reliability, drive this from
-    # an EXTERNAL cron (e.g. cron-job.org) hitting the workflow_dispatch API —
-    # see repo README. We keep an honest, lower-frequency schedule here so we
-    # don't get aggressively throttled.
-    - cron: "*/15 * * * *"
+    # GitHub explicitly documents that scheduled workflows are best-effort and
+    # get delayed most at the top of every hour/interval, since every repo's
+    # cron targets :00/:15/:30/:45 simultaneously. Offsetting to :04/:19/:34/:49
+    # queues behind less contention. Still no guarantee — see README for the
+    # external-cron (cron-job.org -> workflow_dispatch) fallback if this still
+    # drifts past ~20 min.
+    - cron: "4,19,34,49 * * * *"
     - cron: "0 6 * * 0"          # Weekly SEC ticker refresh (Sunday 06:00 UTC)
   workflow_dispatch: {}          # manual + external-cron trigger
 
