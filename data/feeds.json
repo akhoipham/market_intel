@@ -1,57 +1,193 @@
 {
-  "_comment": "Feeds are processed in parallel. Tier is informational only (for future ordering).",
+  "_schema": "rss_feeds: [{name, url, tier}]. tier in {primary, wire, secondary, opinion} controls warn-logging verbosity only. edgar: SEC filings config.",
   "rss_feeds": [
-
-    {"tier": "primary", "name": "Bloomberg — Markets",         "url": "https://feeds.bloomberg.com/markets/news.rss"},
-    {"tier": "primary", "name": "Bloomberg — Technology",      "url": "https://feeds.bloomberg.com/technology/news.rss"},
-    {"tier": "primary", "name": "Bloomberg — Economics",       "url": "https://feeds.bloomberg.com/economics/news.rss"},
-    {"tier": "primary", "name": "Bloomberg — Industries",      "url": "https://feeds.bloomberg.com/industries/news.rss"},
-    {"tier": "primary", "name": "Bloomberg — Politics",        "url": "https://feeds.bloomberg.com/politics/news.rss"},
-
-    {"tier": "primary", "name": "Reuters — Top News",          "url": "https://feeds.reuters.com/reuters/topNews"},
-    {"tier": "primary", "name": "Reuters — Business",          "url": "https://feeds.reuters.com/reuters/businessNews"},
-    {"tier": "primary", "name": "Reuters — Markets",           "url": "https://feeds.reuters.com/reuters/marketsNews"},
-    {"tier": "primary", "name": "Reuters — Finance",           "url": "https://feeds.reuters.com/reuters/financialNews"},
-    {"tier": "primary", "name": "Reuters — Technology",        "url": "https://feeds.reuters.com/reuters/technologyNews"},
-    {"tier": "primary", "name": "Reuters — Health",            "url": "https://feeds.reuters.com/reuters/healthNews"},
-
-    {"tier": "primary", "name": "WSJ — Markets",               "url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain"},
-    {"tier": "primary", "name": "WSJ — World News",            "url": "https://feeds.content.dowjones.io/public/rss/RSSWorldNews"},
-    {"tier": "primary", "name": "WSJ — US Business",           "url": "https://feeds.content.dowjones.io/public/rss/RSSWSJD"},
-    {"tier": "primary", "name": "WSJ — Technology",            "url": "https://feeds.content.dowjones.io/public/rss/RSSTECH"},
-    {"tier": "primary", "name": "WSJ — GNews",                 "url": "https://news.google.com/rss/search?q=site:wsj.com+when:12h&hl=en-US&gl=US&ceid=US:en"},
-
-    {"tier": "primary", "name": "Financial Times — GNews Markets",  "url": "https://news.google.com/rss/search?q=site:ft.com+markets+when:12h&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "primary", "name": "Financial Times — GNews Finance",  "url": "https://news.google.com/rss/search?q=site:ft.com+finance+when:12h&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "primary", "name": "Financial Times — GNews Tech",     "url": "https://news.google.com/rss/search?q=site:ft.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "primary", "name": "Financial Times — RSS UK",         "url": "https://www.ft.com/rss/home/uk"},
-    {"tier": "primary", "name": "Financial Times — RSS US",         "url": "https://www.ft.com/rss/home/us"},
-
-    {"tier": "primary", "name": "CNBC — Top News",             "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"},
-    {"tier": "primary", "name": "CNBC — Markets",              "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258"},
-    {"tier": "primary", "name": "CNBC — Finance",              "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664"},
-    {"tier": "primary", "name": "CNBC — Business",             "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147"},
-    {"tier": "primary", "name": "CNBC — Technology",           "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839135"},
-
-    {"tier": "wire", "name": "GlobeNewswire — Public Companies", "url": "https://www.globenewswire.com/RssFeed/orgclass/1/feedTitle/GlobeNewswire%20-%20News%20about%20Public%20Companies"},
-    {"tier": "wire", "name": "PR Newswire — All News",           "url": "https://www.prnewswire.com/rss/news-releases-list.rss"},
-
-    {"tier": "secondary", "name": "MarketWatch — Top Stories",   "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories"},
-    {"tier": "secondary", "name": "MarketWatch — Market Pulse",  "url": "https://feeds.content.dowjones.io/public/rss/mw_marketpulse"},
-    {"tier": "secondary", "name": "MarketWatch — Economy",       "url": "https://feeds.content.dowjones.io/public/rss/mw_economy"},
-    {"tier": "secondary", "name": "MarketWatch — Technology",    "url": "https://feeds.content.dowjones.io/public/rss/mw_technology"},
-    {"tier": "secondary", "name": "Yahoo Finance — News",        "url": "https://finance.yahoo.com/news/rssindex"},
-    {"tier": "secondary", "name": "Financial Post — Markets",    "url": "https://financialpost.com/category/investing/market-moves/feed"},
-    {"tier": "secondary", "name": "Google News — Stock Market",  "url": "https://news.google.com/rss/search?q=stock%20market%20when:1d&hl=en-US&gl=US&ceid=US:en"},
-    {"tier": "secondary", "name": "Google News — TSX",           "url": "https://news.google.com/rss/search?q=TSX%20stock%20when:1d&hl=en-CA&gl=CA&ceid=CA:en"},
-
-    {"tier": "opinion", "name": "Seeking Alpha — Market News",   "url": "https://seekingalpha.com/market_currents.xml"},
-    {"tier": "opinion", "name": "Benzinga — News",               "url": "https://www.benzinga.com/feed"},
-    {"tier": "opinion", "name": "Investopedia — GNews",          "url": "https://news.google.com/rss/search?q=site:investopedia.com+when:1d&hl=en-US&gl=US&ceid=US:en"}
+    {
+      "name": "Bloomberg - Markets",
+      "url": "https://feeds.bloomberg.com/markets/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - Technology",
+      "url": "https://feeds.bloomberg.com/technology/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - Economics",
+      "url": "https://feeds.bloomberg.com/economics/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - Industries",
+      "url": "https://feeds.bloomberg.com/industries/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - Politics",
+      "url": "https://feeds.bloomberg.com/politics/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - GNews Markets",
+      "url": "https://news.google.com/rss/search?q=site:bloomberg.com+markets+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Bloomberg - GNews Finance",
+      "url": "https://news.google.com/rss/search?q=site:bloomberg.com+finance+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Reuters - GNews Business",
+      "url": "https://news.google.com/rss/search?q=site:reuters.com+business+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Reuters - GNews Markets",
+      "url": "https://news.google.com/rss/search?q=site:reuters.com+markets+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Reuters - GNews Technology",
+      "url": "https://news.google.com/rss/search?q=site:reuters.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "WSJ - Markets",
+      "url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain",
+      "tier": "primary"
+    },
+    {
+      "name": "WSJ - World News",
+      "url": "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
+      "tier": "primary"
+    },
+    {
+      "name": "WSJ - US Business",
+      "url": "https://feeds.content.dowjones.io/public/rss/RSSWSJD",
+      "tier": "primary"
+    },
+    {
+      "name": "WSJ - Technology",
+      "url": "https://feeds.content.dowjones.io/public/rss/RSSTECH",
+      "tier": "primary"
+    },
+    {
+      "name": "WSJ - GNews",
+      "url": "https://news.google.com/rss/search?q=site:wsj.com+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Financial Times - GNews Markets",
+      "url": "https://news.google.com/rss/search?q=site:ft.com+markets+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Financial Times - GNews Finance",
+      "url": "https://news.google.com/rss/search?q=site:ft.com+finance+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Financial Times - GNews Tech",
+      "url": "https://news.google.com/rss/search?q=site:ft.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "CNBC - Top News",
+      "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114",
+      "tier": "primary"
+    },
+    {
+      "name": "CNBC - Markets",
+      "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258",
+      "tier": "primary"
+    },
+    {
+      "name": "CNBC - Finance",
+      "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
+      "tier": "primary"
+    },
+    {
+      "name": "CNBC - Business",
+      "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147",
+      "tier": "primary"
+    },
+    {
+      "name": "CNBC - Technology",
+      "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=19854910",
+      "tier": "primary"
+    },
+    {
+      "name": "GlobeNewswire - Public Companies",
+      "url": "https://www.globenewswire.com/RssFeed/orgclass/1/feedTitle/GlobeNewswire%20-%20News%20about%20Public%20Companies",
+      "tier": "wire"
+    },
+    {
+      "name": "PR Newswire - All News",
+      "url": "https://www.prnewswire.com/rss/news-releases-list.rss",
+      "tier": "wire"
+    },
+    {
+      "name": "MarketWatch - Top Stories",
+      "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories",
+      "tier": "secondary"
+    },
+    {
+      "name": "MarketWatch - Market Pulse",
+      "url": "https://feeds.content.dowjones.io/public/rss/mw_marketpulse",
+      "tier": "secondary"
+    },
+    {
+      "name": "MarketWatch - Economy",
+      "url": "https://feeds.content.dowjones.io/public/rss/mw_economy",
+      "tier": "secondary"
+    },
+    {
+      "name": "MarketWatch - Technology",
+      "url": "https://feeds.content.dowjones.io/public/rss/mw_technology",
+      "tier": "secondary"
+    },
+    {
+      "name": "Yahoo Finance - News",
+      "url": "https://finance.yahoo.com/news/rssindex",
+      "tier": "secondary"
+    },
+    {
+      "name": "Financial Post - Markets",
+      "url": "https://financialpost.com/category/investing/market-moves/feed",
+      "tier": "secondary"
+    },
+    {
+      "name": "Google News - Stock Market",
+      "url": "https://news.google.com/rss/search?q=stock%20market%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "tier": "secondary"
+    },
+    {
+      "name": "Google News - TSX",
+      "url": "https://news.google.com/rss/search?q=TSX%20stock%20when:1d&hl=en-CA&gl=CA&ceid=CA:en",
+      "tier": "secondary"
+    },
+    {
+      "name": "Seeking Alpha - Market News",
+      "url": "https://seekingalpha.com/market_currents.xml",
+      "tier": "opinion"
+    },
+    {
+      "name": "Benzinga - News",
+      "url": "https://www.benzinga.com/feed",
+      "tier": "opinion"
+    },
+    {
+      "name": "Investopedia - GNews",
+      "url": "https://news.google.com/rss/search?q=site:investopedia.com+when:1d&hl=en-US&gl=US&ceid=US:en",
+      "tier": "opinion"
+    }
   ],
   "edgar": {
     "enabled": true,
-    "forms": ["8-K", "4"],
+    "forms": [
+      "8-K",
+      "4"
+    ],
     "url_template": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type={form}&company=&dateb=&owner=include&count=40&output=atom"
   }
 }
