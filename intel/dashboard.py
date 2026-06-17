@@ -139,6 +139,8 @@ tr.tk.on td{background:var(--panel2)}
 .themes-mini{color:var(--faint);font-size:.64rem;max-width:11rem}
 
 .hl{display:flex;gap:.7rem;padding:.55rem 1.2rem;border-bottom:1px solid #151a23}
+.hl-favicon{width:16px;height:16px;border-radius:3px;flex:0 0 auto;margin-top:.2rem;
+  background:var(--panel);object-fit:contain}
 .hl:hover{background:var(--panel)}
 .dot{flex:0 0 auto;width:.55rem;height:.55rem;border-radius:50%;margin-top:.32rem}
 .hl-body{min-width:0}
@@ -255,10 +257,17 @@ const ago = p => {
   return Math.round(d/2592000)+"mo";
 };
 
+// Permanently hide specific tickers everywhere (leaderboard, headline chips,
+// counts) regardless of how they matched. Add a symbol here any time one turns
+// out to be noise — no other code change needed.
+const EXCLUDED_TICKERS = new Set(["NWS", "NWSA", "TISI"]);
+
 const S = {range:86400, fromDate:null, toDate:null, theme:null, ticker:null, q:"",
            sortK:"n", sortDir:-1, lens:"", cap:"", sent:null, feed:"news"};
 
 const isInsider = a => a.k==="filing" && /^Form 4/.test(a.t);
+const domain = a => { try { return new URL(a.u).hostname.replace(/^www\./,""); }
+                      catch { return ""; } };
 
 // ── data loading ────────────────────────────────────────────────────────────
 const DATA_URL = "./data.json";
@@ -270,7 +279,9 @@ async function loadData() {
     const resp = await fetch(DATA_URL + "?_=" + Date.now());
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const json = await resp.json();
-    DATA  = json.articles || [];
+    DATA  = (json.articles || []).map(a => ({
+      ...a, tk: (a.tk || []).filter(m => !EXCLUDED_TICKERS.has(m.ticker))
+    }));
     BUILT = json.built   || Math.floor(Date.now()/1000);
     secsLeft = REFRESH_S;
     render();
@@ -411,8 +422,10 @@ function render(){
     const cls=sentClass(a.sn);
     const tks=a.tk.slice(0,4).map(m=>esc(m.ticker)).join(" ");
     const ths=a.th.slice(0,2).map(esc).join(" · ");
+    const fav=`https://www.google.com/s2/favicons?domain=${esc(domain(a))}&sz=32`;
     return `<a href="${esc(a.u)}" target="_blank" rel="noopener">
       <div class="hl ${a.k==="filing"?"filing":""} ${a.k==="opinion"?"opinion":""}">
+      <img class="hl-favicon" src="${fav}" alt="" loading="lazy" width="16" height="16">
       <span class="dot ${cls}" style="background:currentColor"></span>
       <div class="hl-body"><div class="hl-title">${esc(a.t)}</div>
       <div class="hl-meta">${a.k==="opinion"?`<span class="op-tag">OPINION</span>`:""}<span>${ago(a.p)}</span><span class="src">${esc(a.s)}</span>
