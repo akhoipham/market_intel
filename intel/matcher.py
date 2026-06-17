@@ -26,6 +26,20 @@ EXCHANGE_TAG_RE = re.compile(
     r"\(?\b(NYSE|NASDAQ|Nasdaq|TSX|TSXV|TSX-V|AMEX|CBOE)\s*[:\-]\s*([A-Z]{1,5}(?:\.[A-Z])?)\)?"
 )
 
+# Outlets that BOTH publish news AND are themselves listed/coverable companies.
+# Aggregators (Google News, Yahoo) append the publisher as a trailing byline,
+# e.g. "Why Most Stocks Aren't Worth Owning - Morningstar". That trailing
+# attribution is the SOURCE, not the SUBJECT, so we strip it before name
+# matching — otherwise every Morningstar/Forbes/CNBC byline self-matches.
+PUBLISHER_BYLINE_RE = re.compile(
+    r"\s*[-–—|]\s*(?:FT\.com\s*[-–—|]\s*)?"
+    r"(Morningstar|Forbes|Bloomberg|Reuters|CNBC|Barron'?s|Benzinga|"
+    r"Investopedia|MarketWatch|Yahoo Finance|Seeking Alpha|The Motley Fool|"
+    r"Motley Fool|Financial Times|Wall Street Journal|Zacks|TheStreet|"
+    r"Business Insider|Forbes\.com)\s*$",
+    re.IGNORECASE,
+)
+
 # Words that signal a headline is about a listed company, used to confirm
 # ambiguous name matches.
 CONTEXT_WORDS = re.compile(
@@ -96,10 +110,13 @@ class TickerMatcher:
             self._add(found, t, "exchange_tag", confirmed_tickers)
 
         # Tier 3: names/aliases
-        has_context = bool(CONTEXT_WORDS.search(text))
+        # Strip a trailing publisher byline so the SOURCE outlet isn't matched
+        # as the SUBJECT (e.g. "... - Morningstar" -> drop "- Morningstar").
+        name_text = PUBLISHER_BYLINE_RE.sub("", text)
+        has_context = bool(CONTEXT_WORDS.search(name_text))
         consumed_spans: list[tuple[int, int]] = []
         for pattern, comp in self._name_patterns:
-            m = pattern.search(text)
+            m = pattern.search(name_text)
             if not m:
                 continue
             # Don't double-match inside an already-matched longer phrase
