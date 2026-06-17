@@ -67,11 +67,6 @@
       "tier": "primary"
     },
     {
-      "name": "WSJ - Technology",
-      "url": "https://feeds.content.dowjones.io/public/rss/RSSTECH",
-      "tier": "primary"
-    },
-    {
       "name": "WSJ - GNews",
       "url": "https://news.google.com/rss/search?q=site:wsj.com+when:12h&hl=en-US&gl=US&ceid=US:en",
       "tier": "primary"
@@ -137,16 +132,6 @@
       "tier": "secondary"
     },
     {
-      "name": "MarketWatch - Economy",
-      "url": "https://feeds.content.dowjones.io/public/rss/mw_economy",
-      "tier": "secondary"
-    },
-    {
-      "name": "MarketWatch - Technology",
-      "url": "https://feeds.content.dowjones.io/public/rss/mw_technology",
-      "tier": "secondary"
-    },
-    {
       "name": "Yahoo Finance - News",
       "url": "https://finance.yahoo.com/news/rssindex",
       "tier": "secondary"
@@ -180,6 +165,21 @@
       "name": "Investopedia - GNews",
       "url": "https://news.google.com/rss/search?q=site:investopedia.com+when:1d&hl=en-US&gl=US&ceid=US:en",
       "tier": "opinion"
+    },
+    {
+      "name": "WSJ - GNews Tech",
+      "url": "https://news.google.com/rss/search?q=site:wsj.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "MarketWatch - GNews Economy",
+      "url": "https://news.google.com/rss/search?q=site:marketwatch.com+economy+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "secondary"
+    },
+    {
+      "name": "MarketWatch - GNews Tech",
+      "url": "https://news.google.com/rss/search?q=site:marketwatch.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "secondary"
     }
   ],
   "edgar": {
