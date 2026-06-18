@@ -15,6 +15,8 @@ import json
 import re
 from pathlib import Path
 
+from .tickers import RISKY_BARE_WORDS as _COMMON
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SEED_CSV = DATA_DIR / "tickers_seed.csv"
 EXPANDED_CSV = DATA_DIR / "universe_expanded.csv"
@@ -26,13 +28,6 @@ FIELDS = ["ticker", "exchange", "name", "aliases", "sector", "ambiguous"]
 # Tokens that don't make a name distinctive on their own.
 _SUFFIX = {"corp", "inc", "co", "ltd", "plc", "group", "the", "holdings",
            "corporation", "company", "sa", "nv", "ag", "class", "a", "b", "c"}
-# Single-word names matching these bare-match ordinary prose -> force ambiguous.
-_COMMON = set("""news team group global power energy systems holdings capital industries
-technologies financial international resources solutions company corporation partners
-enterprises services one first open box fox root stem compass pool gap target visa ford
-apple now main sound wing peak arch core edge flow grid loop node data cloud metal gold
-oil gas sun star wave atlas summit union alliance liberty heritage legacy pioneer frontier
-horizon beacon match life health home work play build grow rise leap shift bank trust fund""".split())
 
 
 def _is_noise_word_name(name: str) -> bool:

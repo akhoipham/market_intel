@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from .tickers import Company
+from .tickers import Company, RISKY_BARE_WORDS
 
 CASHTAG_RE = re.compile(r"\$([A-Z]{1,5})(?:\.(?:TO|V|CN))?\b")
 EXCHANGE_TAG_RE = re.compile(
@@ -36,9 +36,35 @@ PUBLISHER_BYLINE_RE = re.compile(
     r"(Morningstar|Forbes|Bloomberg|Reuters|CNBC|Barron'?s|Benzinga|"
     r"Investopedia|MarketWatch|Yahoo Finance|Seeking Alpha|The Motley Fool|"
     r"Motley Fool|Financial Times|Wall Street Journal|Zacks|TheStreet|"
-    r"Business Insider|Forbes\.com)\s*$",
+    r"Business Insider|Forbes\.com|New York Post|Washington Post|Denver Post|"
+    r"NY Post)\s*$",
     re.IGNORECASE,
 )
+
+# "Lifts target to $110", "hiked his price target", "Analyst Target Changes" —
+# generic analyst price-target language that has nothing to do with Target
+# Corp (TGT). Stripped before name matching so it can't self-match. Genuine
+# Target Corp mentions ("Target misses quarterly sales") don't use this
+# phrasing and are unaffected.
+PRICE_TARGET_RE = re.compile(
+    r"\b(?:price\s+targets?|targets?\s+price|"
+    r"(?:lifts?|raises?|cuts?|hikes?|trims?|ups?|boosts?|slashes?|sets?|"
+    r"reiterates?|maintains?|drops?)\s+(?:\w+\s+){0,2}(?:price\s+)?targets?\b|"
+    r"\btargets?\s+(?:to|at|of)\s+\$|"
+    r"\banalyst\s+targets?\b|\b(?:his|her|its|their)\s+(?:price\s+)?targets?\b|"
+    r"\btarget\s+changes?\b|\btarget\s+price\s+(?:changes?|revisions?)\b)",
+    re.IGNORECASE,
+)
+
+# Known phrase collisions: a company's bare name/alias is a literal substring
+# of a DIFFERENT real company's name. (ticker, phrase) -> fixed-width strings
+# that must not immediately precede the match. Add future cases here.
+# SQ's "Block"/"Block Inc." would otherwise match inside "H&R Block Inc."
+_COLLISION_GUARDS: dict[tuple[str, str], tuple[str, ...]] = {
+    ("SQ", "Block"): ("H&R ", "H & R "),
+    ("SQ", "Block Inc"): ("H&R ", "H & R "),
+    ("SQ", "Block Inc."): ("H&R ", "H & R "),
+}
 
 # Words that signal a headline is about a listed company, used to confirm
 # ambiguous name matches.
@@ -46,7 +72,7 @@ CONTEXT_WORDS = re.compile(
     r"\b(shares?|stock|stocks|earnings|revenue|profit|guidance|forecast|"
     r"quarterly|q[1-4]\b|fy\d{2}|ipo|dividend|buyback|merger|acquisition|"
     r"acquire[sd]?|ceo|cfo|chairman|board|analyst|upgrade[sd]?|downgrade[sd]?|"
-    r"price target|valuation|market cap|sec\b|filing|lawsuit|antitrust|"
+    r"valuation|market cap|sec\b|filing|lawsuit|antitrust|"
     r"investors?|wall street|premarket|after.?hours|trading|nyse|nasdaq|tsx|"
     r"layoffs?|restructuring|bankruptcy|sales|outlook|results|beat|miss(es|ed)?|"
     r"recalls?|reports?|announce[sd]?|unveil(s|ed)?|demand|contracts?)\b",
@@ -82,17 +108,29 @@ class TickerMatcher:
                 phrases.append((phrase, c))
         phrases.sort(key=lambda p: len(p[0]), reverse=True)
 
-        self._name_patterns: list[tuple[re.Pattern, Company]] = [
-            (re.compile(r"(?<![\w&])" + re.escape(p) + r"(?![\w])",
-                        0 if self._needs_case(p) else re.IGNORECASE), c)
-            for p, c in phrases
-        ]
+        self._name_patterns: list[tuple[re.Pattern, Company]] = []
+        for p, c in phrases:
+            guards = _COLLISION_GUARDS.get((c.ticker.upper(), p), ())
+            lookbehinds = "".join(f"(?<!{g})" for g in guards) + r"(?<![\w&])"
+            # Negative lookahead excludes both a trailing word char ("Posted")
+            # AND a trailing hyphen+letter ("Post-IPO", "post-pandemic") so
+            # compound-prefix usage of a company name never bare-matches.
+            lookahead = r"(?![\w])(?!-[A-Za-z])"
+            pattern = lookbehinds + re.escape(p) + lookahead
+            flags = 0 if self._needs_case(p) else re.IGNORECASE
+            self._name_patterns.append((re.compile(pattern, flags), c))
 
     @staticmethod
     def _needs_case(phrase: str) -> bool:
         """Short all-caps aliases (AMD, IBM, UPS, KLA, BP...) must match
-        case-sensitively or they'd hit ordinary words."""
-        return phrase.isupper() and len(phrase) <= 5
+        case-sensitively or they'd hit ordinary words. Same for single-word
+        names that double as common English words/concepts (News, Team,
+        Post, Square, Block...): real company usage is reliably capitalized,
+        while the colliding generic usage is usually lowercase mid-sentence
+        ("post offices", "leadership team")."""
+        if phrase.isupper() and len(phrase) <= 5:
+            return True
+        return phrase.lower() in RISKY_BARE_WORDS
 
     # ------------------------------------------------------------------
     def match(self, text: str) -> list[Match]:
@@ -113,6 +151,7 @@ class TickerMatcher:
         # Strip a trailing publisher byline so the SOURCE outlet isn't matched
         # as the SUBJECT (e.g. "... - Morningstar" -> drop "- Morningstar").
         name_text = PUBLISHER_BYLINE_RE.sub("", text)
+        name_text = PRICE_TARGET_RE.sub(" ", name_text)
         has_context = bool(CONTEXT_WORDS.search(name_text))
         consumed_spans: list[tuple[int, int]] = []
         for pattern, comp in self._name_patterns:

@@ -26,6 +26,22 @@ SEC_TICKER_URL = "https://www.sec.gov/files/company_tickers.json"
 # Exchange-labeled variant (NASDAQ/NYSE/etc.) — preferred for the unified file.
 SEC_TICKER_EXCHANGE_URL = "https://www.sec.gov/files/company_tickers_exchange.json"
 
+# Single-word company names/aliases that are also ordinary English words or
+# concepts (News, Team, Post, Square, Block, Target...). These get flagged
+# ambiguous in the consolidated universe AND matched case-sensitively by the
+# matcher (real company usage is reliably capitalized; the colliding generic
+# usage is usually lowercase mid-sentence — "post offices", "leadership team").
+# Shared in one place so the universe-builder and the matcher agree.
+RISKY_BARE_WORDS = frozenset("""
+news team group global power energy systems holdings capital industries
+technologies financial international resources solutions company corporation
+partners enterprises services one first open box fox root stem compass pool
+gap target visa ford apple now main sound wing peak arch core edge flow grid
+loop node data cloud metal gold oil gas sun star wave atlas summit union
+alliance liberty heritage legacy pioneer frontier horizon beacon match life
+health home work play build grow rise leap shift bank trust fund post square
+block""".split())
+
 
 @dataclass
 class Company:
