@@ -67,6 +67,9 @@ a:hover .hl-title{color:var(--amber)}
 .feedtabs button.on{background:var(--amber);color:#0a0c10}
 
 .tape-label{padding:.2rem 1.4rem 0;font-size:.62rem;letter-spacing:.18em;color:var(--faint)}
+.tapesort{background:none;border:0;color:var(--dim);font:600 .62rem var(--mono);
+  letter-spacing:.14em;cursor:pointer;padding:0;border-bottom:1px dashed var(--faint)}
+.tapesort:hover{color:var(--amber);border-bottom-color:var(--amber-dim)}
 .tape{display:flex;gap:.45rem;overflow-x:auto;padding:.55rem 1.4rem .9rem;
   scrollbar-width:thin;scrollbar-color:var(--faint) transparent}
 .chip{flex:0 0 auto;display:flex;flex-direction:column;gap:.18rem;cursor:pointer;
@@ -157,12 +160,6 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
   <div class="ranges" id="ranges" role="tablist" aria-label="Time range"></div>
   <label class="datectl">from <input type="date" id="from" aria-label="From date">
     to <input type="date" id="to" aria-label="To date"></label>
-  <select class="selctl" id="lens" aria-label="Lens">
-    <option value="">all lenses</option>
-    <option value="Markets">Markets</option>
-    <option value="Macro & Rates">Macro &amp; Rates</option>
-    <option value="Geopolitics">Geopolitics</option>
-  </select>
   <select class="selctl" id="cap" aria-label="Market cap">
     <option value="">all caps</option>
     <option value="mega">Mega ≥$200B</option>
@@ -181,7 +178,7 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
   </div>
 </div>
 
-<div class="tape-label">THEME TAPE — MENTIONS / NET SENTIMENT IN WINDOW <span id="active-filters"></span></div>
+<div class="tape-label">THEME TAPE — <button class="tapesort" id="tape-sort" title="Click to change theme order">MENTIONS ↓</button> <span id="active-filters"></span></div>
 <div class="tape" id="tape"></div>
 
 <div class="grid">
@@ -202,9 +199,10 @@ footer{padding:1rem 1.4rem 2rem;color:var(--faint);font-size:.66rem;line-height:
   </section>
   <section class="pane">
     <h2>Headline Tape <span id="hl-count" style="color:var(--faint)"></span>
-      <span class="feedtabs" id="feedtabs" role="tablist">
-        <button data-feed="news" class="on" role="tab">News</button>
-        <button data-feed="insider" role="tab">Insider</button>
+      <span class="feedtabs" id="brackets" role="tablist" aria-label="Headline bracket">
+        <button data-br="equities" class="on" role="tab">Equities</button>
+        <button data-br="macro" role="tab">Macro</button>
+        <button data-br="insider" role="tab">Insider</button>
       </span>
     </h2>
     <div class="scrollbox" id="hl-scroll"><div id="hl-list"></div></div>
@@ -243,9 +241,16 @@ const ago = p => {
 const EXCLUDED_TICKERS = new Set(["NWS", "NWSA", "TISI"]);
 
 const S = {range:86400, fromDate:null, toDate:null, theme:null, ticker:null, q:"",
-           sortK:"n", sortDir:-1, lens:"", cap:"", sent:null, feed:"news"};
+           sortK:"n", sortDir:-1, cap:"", sent:null, bracket:"equities", tapeSort:"n"};
 
 const isInsider = a => a.k==="filing" && /^Form 4/.test(a.t);
+// Top-level bracket. Prefer the value baked in by the backend (themes.bracket_for);
+// fall back to deriving it client-side so the page still works against a data.json
+// built before this field existed (e.g. during the deploy window).
+const bracketOf = a => a.br
+  || (isInsider(a) ? "insider"
+      : (a.ln||[]).some(l => l==="Macro & Rates" || l==="Geopolitics") ? "macro"
+      : "equities");
 const domain = a => { try { return new URL(a.u).hostname.replace(/^www\./,""); }
                       catch { return ""; } };
 
@@ -305,7 +310,7 @@ function passText(a){
   return a.t.toLowerCase().includes(q) ||
     a.tk.some(m=>m.ticker.toLowerCase().includes(q)||m.company.toLowerCase().includes(q));
 }
-function passLens(a){ return !S.lens || (a.ln||[]).includes(S.lens); }
+function passLens(a){ return true; }   // lens dropdown removed; brackets supersede it
 function passCap(a){ return !S.cap || a.tk.some(m=>m.tier===S.cap); }
 function passSent(a){
   if(!S.sent) return true;
@@ -315,9 +320,9 @@ function passSent(a){
   if(S.sent==="bear") return a.sn<=-.25;
   return a.sn>-.25 && a.sn<.25;                // flat / neutral
 }
-function passFeed(a){ return S.feed==="insider" ? isInsider(a) : !isInsider(a); }
+function passBracket(a){ return bracketOf(a)===S.bracket; }
 function visible(){ return DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)
-  &&passCap(a)&&passSent(a)&&passFeed(a)
+  &&passCap(a)&&passSent(a)&&passBracket(a)
   &&(!S.theme||a.th.includes(S.theme))
   &&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker))); }
 
@@ -337,14 +342,14 @@ function render(){
 
   $("asof").textContent = BUILT ? new Date(BUILT*1000).toLocaleString() : "–";
   refreshAge();
-  $("total-n").textContent = DATA.filter(a=>inWindow(a)&&passFeed(a)).length;
+  $("total-n").textContent = DATA.filter(a=>inWindow(a)&&passBracket(a)).length;
 
   const win = visible();
   const winNoTk = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
-    &&passSent(a)&&passFeed(a)&&(!S.theme||a.th.includes(S.theme)));
+    &&passSent(a)&&passBracket(a)&&(!S.theme||a.th.includes(S.theme)));
   // KPI counts are over the window (ignoring the active sentiment filter so the
   // tallies stay stable as you toggle them)
-  const kbase = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)&&passFeed(a)
+  const kbase = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)&&passBracket(a)
     &&(!S.theme||a.th.includes(S.theme))&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
   $("f-bull").firstElementChild.textContent = kbase.filter(a=>a.k!=="opinion"&&a.sn>=.25).length;
   $("f-bear").firstElementChild.textContent = kbase.filter(a=>a.k!=="opinion"&&a.sn<=-.25).length;
@@ -356,11 +361,16 @@ function render(){
 
   // theme tape
   const base = DATA.filter(a=>inWindow(a)&&passText(a)&&passLens(a)&&passCap(a)
-    &&passSent(a)&&passFeed(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
+    &&passSent(a)&&passBracket(a)&&(!S.ticker||a.tk.some(m=>m.ticker===S.ticker)));
   const tstat={};
   for(const a of base) for(const th of a.th){
     (tstat[th]||={n:0,s:0}); tstat[th].n++; tstat[th].s+=a.sn; }
-  $("tape").innerHTML = Object.entries(tstat).sort((x,y)=>y[1].n-x[1].n)
+  const tcmp = {
+    n: (x,y)=> y[1].n - x[1].n,                       // most mentioned first
+    s: (x,y)=> (y[1].s/y[1].n) - (x[1].s/x[1].n),     // most bullish net sentiment first
+    a: (x,y)=> x[0].localeCompare(y[0]),              // A–Z by name
+  }[S.tapeSort] || ((x,y)=>y[1].n-x[1].n);
+  $("tape").innerHTML = Object.entries(tstat).sort(tcmp)
     .map(([name,v])=>{
       const avg=v.s/v.n, cls=sentClass(avg);
       return `<div class="chip ${S.theme===name?"on":""}" data-th="${esc(name)}" tabindex="0" role="button"
@@ -439,16 +449,21 @@ function onDate(){
 $("from").addEventListener("change", onDate);
 $("to").addEventListener("change", onDate);
 $("q").addEventListener("input", e=>{ S.q=e.target.value.trim(); render(); });
-$("lens").addEventListener("change", e=>{ S.lens=e.target.value; render(); });
 $("cap").addEventListener("change", e=>{ S.cap=e.target.value; render(); });
 // sentiment filters (clickable KPIs)
 document.querySelector(".kpis").addEventListener("click", e=>{
   const b=e.target.closest(".kpi"); if(!b) return;
   S.sent = S.sent===b.dataset.sent ? null : b.dataset.sent; render(); });
-$("feedtabs").addEventListener("click", e=>{
+$("brackets").addEventListener("click", e=>{
   const b=e.target.closest("button"); if(!b) return;
-  S.feed=b.dataset.feed;
-  document.querySelectorAll("#feedtabs button").forEach(x=>x.classList.toggle("on",x===b));
+  S.bracket=b.dataset.br;
+  document.querySelectorAll("#brackets button").forEach(x=>x.classList.toggle("on",x===b));
+  render(); });
+// theme-tape order toggle: mentions → net sentiment → A–Z → (repeat)
+$("tape-sort").addEventListener("click", ()=>{
+  const order=["n","s","a"], label={n:"MENTIONS ↓",s:"SENTIMENT ↓",a:"NAME A–Z"};
+  S.tapeSort=order[(order.indexOf(S.tapeSort)+1)%order.length];
+  $("tape-sort").textContent=label[S.tapeSort];
   render(); });
 $("tape").addEventListener("click", e=>{
   const c=e.target.closest(".chip"); if(!c) return;
