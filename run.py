@@ -31,8 +31,14 @@ def cmd_build():
 
 
 def cmd_refresh_tickers():
-    n = refresh_from_sec()
-    print(f"Saved {n} SEC tickers for cashtag/exchange-tag matching.")
+    # 1) Pull current SEC list (CI has network access SEC allows).
+    refresh_from_sec()
+    # 2) Rebuild the single unified data/tickers.csv from all three sources.
+    #    This step was missing from root run.py — intel/run.py had it but this
+    #    file is what the GitHub Actions workflow actually calls.
+    from intel.consolidate_tickers import consolidate
+    n = consolidate()
+    print(f"Rebuilt unified data/tickers.csv with {n} tickers.")
 
 
 def cmd_demo():
