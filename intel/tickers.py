@@ -40,7 +40,7 @@ gap target visa ford apple now main sound wing peak arch core edge flow grid
 loop node data cloud metal gold oil gas sun star wave atlas summit union
 alliance liberty heritage legacy pioneer frontier horizon beacon match life
 health home work play build grow rise leap shift bank trust fund post square
-block""".split())
+block seek perfect bullish""".split())
 
 
 @dataclass
