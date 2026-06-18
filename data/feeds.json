@@ -1,5 +1,5 @@
 {
-  "_schema": "rss_feeds: [{name, url, tier}]. tier in {primary, wire, secondary, opinion} controls warn-logging verbosity only. edgar: SEC filings config.",
+  "_schema": "rss_feeds: [{name, url, tier}]. tier in {primary, wire, secondary, opinion}. Priority-1 sources (Investing.com, Reuters, Bloomberg, WSJ, FT, Morningstar, CNBC) = 'primary'; wires (PR Newswire, GlobeNewswire) = 'wire'; aggregators = 'secondary'; commentary (Seeking Alpha, Benzinga) = 'opinion'. tier currently controls warn-logging verbosity; it does not yet re-rank the tape (recency-first). Investing.com direct RSS endpoints are best-effort (Cloudflare may block CI); the paired (GNews) proxies guarantee section coverage and the pipeline dedups overlap. edgar: SEC filings config.",
   "rss_feeds": [
     {
       "name": "Bloomberg - Markets",
@@ -180,6 +180,61 @@
       "name": "MarketWatch - GNews Tech",
       "url": "https://news.google.com/rss/search?q=site:marketwatch.com+technology+when:12h&hl=en-US&gl=US&ceid=US:en",
       "tier": "secondary"
+    },
+    {
+      "name": "Investing.com - Breaking News",
+      "url": "https://www.investing.com/rss/news.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Breaking (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+breaking+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Stock Markets",
+      "url": "https://www.investing.com/rss/news_25.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Stock Markets (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+stock+market+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Company News (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+company+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Earnings (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+earnings+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Commodities",
+      "url": "https://www.investing.com/rss/news_11.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Commodities (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+commodities+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Economic Indicators",
+      "url": "https://www.investing.com/rss/news_95.rss",
+      "tier": "primary"
+    },
+    {
+      "name": "Investing.com - Economic (GNews)",
+      "url": "https://news.google.com/rss/search?q=site:investing.com+economic+when:12h&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
+    },
+    {
+      "name": "Morningstar - GNews",
+      "url": "https://news.google.com/rss/search?q=site:morningstar.com+when:1d&hl=en-US&gl=US&ceid=US:en",
+      "tier": "primary"
     }
   ],
   "edgar": {
