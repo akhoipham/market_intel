@@ -1541,7 +1541,7 @@ BSM,NYSE,Black Stone Minerals L.P. Common units representing limited partner int
 BSOL,US,Bitwise Solana Staking ETF,,,0
 BSPA,US,"Ballston Spa Bancorp, Inc.",,,0
 BSPK,US,"Bespoke Extracts, Inc.",,,0
-BSQKZ,US,"Block, Inc.",,,0
+BSQKZ,US,"Block, Inc.",,,1
 BSRR,NASDAQ,Sierra Bancorp,,Financials,0
 BST,NYSE,BlackRock Science and Technology Trust Common Shares of Beneficial Interest,,Financials,0
 BSTR,US,"BSTR Holdings, Inc.",,,0
@@ -8733,7 +8733,7 @@ SPXC,NYSE,SPX Technologies,,Industrials,0
 SPXSF,US,Spirax-Sarco Engineering PLC/ADR,,,0
 SPXX,US,Nuveen S&P 500 Dynamic Overwrite Fund,,,0
 SPY,US,SPDR S&P 500 ETF TRUST,,,0
-SQ,NYSE,Block Inc.,Block Inc|Square,Technology,1
+SQ,NYSE,Block Inc.,Block Inc,Technology,1
 SQFT,US,"Presidio Property Trust, Inc.",,,0
 SQFTP,US,"Presidio Property Trust, Inc.",,,0
 SQFTW,US,"Presidio Property Trust, Inc.",,,0
@@ -10267,7 +10267,7 @@ XXI,NYSE,Twenty One Capital,,Financials,0
 XXII,US,"22nd Century Group, Inc.",,,0
 XYF,NYSE,X Financial,,Financials,0
 XYL,NYSE,Xylem,,Industrials,0
-XYZ,NYSE,Block,,Technology,0
+XYZ,NYSE,Block,,Technology,1
 XZJCF,US,Mitsui Kinzoku Co Ltd./ADR,,,0
 XZO,NYSE,Exzeo Group,,Financials,0
 YAAS,US,Youxin Technology Ltd,,,0
