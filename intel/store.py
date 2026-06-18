@@ -133,5 +133,6 @@ def export_window(conn: sqlite3.Connection, max_age_days: int = 400) -> list[dic
             "t": title, "u": url, "s": source, "k": kind, "p": published,
             "sn": round(sent, 3),
             "tk": tks, "th": ths, "ln": lenses,
+            "br": themes_mod.bracket_for(kind, title, lenses),
         })
     return out

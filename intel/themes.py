@@ -217,3 +217,26 @@ def lens_for(theme: str) -> str:
 def impacted_themes(theme: str) -> list[str]:
     """For a geopolitics theme, the downstream sectors/themes it tends to move."""
     return GEO_IMPACT.get(theme, [])
+
+
+# ── HEADLINE BRACKETS ────────────────────────────────────────────────────────
+# Top-level, mutually-exclusive bucket for the headline tape. Every article
+# lands in exactly one. This is the relocated/relabelled "lens" concept, now
+# living on the headline tape itself:
+#   insider  — Form 4 insider filings (the narrowest, kept identical to the old
+#              Insider feed tab so behaviour doesn't silently change).
+#   macro    — top-down stories: anything whose lens is Macro & Rates or
+#              Geopolitics (rates/Fed/tariffs/banks + every geopolitics theme).
+#   equities — everything else: bottom-up company / sector / thematic news,
+#              8-K material events, earnings, PR-wire company releases, etc.
+# Kept here (not in the browser) so it's transparent, unit-tested, and edited in
+# one place — same rationale as the theme/lens dictionaries above.
+_MACRO_LENSES = {"Macro & Rates", "Geopolitics"}
+
+
+def bracket_for(kind: str, title: str, lenses: list[str]) -> str:
+    if kind == "filing" and title.startswith("Form 4"):
+        return "insider"
+    if any(ln in _MACRO_LENSES for ln in lenses):
+        return "macro"
+    return "equities"
