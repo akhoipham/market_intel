@@ -2,37 +2,38 @@ name: Update dashboard
 
 on:
   schedule:
-    # On the hour, exactly, as requested. Note: GitHub's docs flag :00 as the
-    # single most congested minute-mark for cron scheduling (every repo's
-    # hourly/daily jobs target it too) — a marginally higher delay risk than
-    # an offset minute, but the actual difference is small and unproven here.
-    - cron: "0 * * * *"
-    - cron: "0 6 * * 0"          # Weekly SEC ticker refresh (Sunday 06:00 UTC)
-  workflow_dispatch: {}          # manual + external-cron trigger
+    - cron: "7 * * * *"     # :07 past each hour — avoids the :00 congestion spike
+    - cron: "7 6 * * 0"     # Weekly SEC ticker refresh (Sunday 06:07 UTC)
+  workflow_dispatch: {}     # manual + external-cron trigger
 
 permissions:
   contents: write
 
 concurrency:
   group: update-dashboard
-  cancel-in-progress: true   # a hung run must never permanently block the schedule
+  cancel-in-progress: false  # let backed-up runs drain sequentially; timeout-minutes: 5
+                              # below already caps any single hung run, so false is safe.
+                              # true was silently compounding GitHub's scheduler delays:
+                              # batched releases cancelled all-but-last of queued runs,
+                              # producing apparent gaps of 7-14h on an hourly cron.
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 5   # normal runs take 30-55s; this bounds any hang hard
+    timeout-minutes: 5      # bounds any single hung run; makes cancel-in-progress: false safe
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"       # cache installed packages across runs — saves ~35s per run
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Weekly ticker refresh (Sundays only)
-        if: github.event.schedule == '0 6 * * 0'
+        if: github.event.schedule == '7 6 * * 0'
         run: python run.py refresh-tickers
 
       - name: Fetch feeds and build dashboard
