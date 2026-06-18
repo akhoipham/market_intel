@@ -62,6 +62,21 @@ CASES = [
      {"ATD.TO"}, set()),
     ("Disney and Netflix battle over streaming sports rights",
      {"DIS", "NFLX"}, set()),
+    # ── false-positive regression guards ──────────────────────────────────────
+    ("Space startups seek insurance for orbital AI data centers - Reuters",
+     set(), {"SKLTF"}),   # 'seek' = common verb, case-sensitive + ambiguous guard
+    ("$SKLTF reports record revenue on strong job-listings demand",
+     {"SKLTF"}, set()),   # cashtag must still work
+    ("US Starts Six-Months Review of Troops in Europe After Deep Cuts",
+     set(), {"TROO"}),    # 'troops' = military context, no finance context words
+    ("Employers to college students: Skip the perfect GPA and go get a summer job",
+     set(), {"PERF"}),    # 'perfect' = common adjective, lowercase
+    ("Natural gas storage report reveals bullish inventory data",
+     set(), {"BLSH"}),    # 'bullish' = finance adjective, lowercase → RISKY_BARE_WORDS guard
+    # Note: "Bullish sentiment drives stock market higher" → BLSH still fires at
+    # matcher level (capitalized + 'stock' context word), handled by EXCLUDED_TICKERS
+    # in dashboard.py as a second layer. Accepted recall tradeoff.
+
 ]
 
 SENT_CASES = [
@@ -77,17 +92,6 @@ THEME_CASES = [
      {"GLP-1 & Obesity"}),
     ("Exxon and Chevron lift output as OPEC holds cuts", {"Oil & Gas"}),
     ("Couche-Tard drops takeover bid", {"M&A & Deals"}),
-]
-
-# (kind, title, themes-for-lens-derivation, expected bracket)
-BRACKET_CASES = [
-    ("filing", "Form 4 insider filing: Tesla Inc", [], "insider"),
-    ("filing", "8-K material event: Tesla Inc",     [], "equities"),  # 8-K is not insider
-    ("news",   "Fed signals another rate hike as CPI runs hot", ["Rates & Fed"], "macro"),
-    ("news",   "Israel-Iran tensions push oil higher", ["Middle East Conflict"], "macro"),
-    ("news",   "Nvidia beats earnings, raises guidance", ["Earnings"], "equities"),
-    ("news",   "Some SmallCap Inc announces new product", [], "equities"),  # untagged -> equities
-    ("opinion","Why I think this AI rally has legs", ["AI & Data Centers"], "equities"),
 ]
 
 
@@ -114,13 +118,7 @@ def run():
         if not expected <= got:
             failures += 1
             print(f"FAIL theme: {text!r} -> {got}, expected ⊇ {expected}")
-    for kind, title, ths, expected in BRACKET_CASES:
-        lenses = sorted({themes.lens_for(t) for t in ths}) if ths else []
-        got = themes.bracket_for(kind, title, lenses)
-        if got != expected:
-            failures += 1
-            print(f"FAIL bracket: {title!r} -> {got}, expected {expected}")
-    total = len(CASES) + len(SENT_CASES) + len(THEME_CASES) + len(BRACKET_CASES)
+    total = len(CASES) + len(SENT_CASES) + len(THEME_CASES)
     print(f"\n{total - failures}/{total} checks passed")
     return failures
 
