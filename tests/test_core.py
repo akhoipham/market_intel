@@ -79,6 +79,17 @@ THEME_CASES = [
     ("Couche-Tard drops takeover bid", {"M&A & Deals"}),
 ]
 
+# (kind, title, themes-for-lens-derivation, expected bracket)
+BRACKET_CASES = [
+    ("filing", "Form 4 insider filing: Tesla Inc", [], "insider"),
+    ("filing", "8-K material event: Tesla Inc",     [], "equities"),  # 8-K is not insider
+    ("news",   "Fed signals another rate hike as CPI runs hot", ["Rates & Fed"], "macro"),
+    ("news",   "Israel-Iran tensions push oil higher", ["Middle East Conflict"], "macro"),
+    ("news",   "Nvidia beats earnings, raises guidance", ["Earnings"], "equities"),
+    ("news",   "Some SmallCap Inc announces new product", [], "equities"),  # untagged -> equities
+    ("opinion","Why I think this AI rally has legs", ["AI & Data Centers"], "equities"),
+]
+
 
 def run():
     failures = 0
@@ -103,7 +114,13 @@ def run():
         if not expected <= got:
             failures += 1
             print(f"FAIL theme: {text!r} -> {got}, expected ⊇ {expected}")
-    total = len(CASES) + len(SENT_CASES) + len(THEME_CASES)
+    for kind, title, ths, expected in BRACKET_CASES:
+        lenses = sorted({themes.lens_for(t) for t in ths}) if ths else []
+        got = themes.bracket_for(kind, title, lenses)
+        if got != expected:
+            failures += 1
+            print(f"FAIL bracket: {title!r} -> {got}, expected {expected}")
+    total = len(CASES) + len(SENT_CASES) + len(THEME_CASES) + len(BRACKET_CASES)
     print(f"\n{total - failures}/{total} checks passed")
     return failures
 
