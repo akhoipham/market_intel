@@ -112,6 +112,11 @@ NEGATIVE = {
     "struggled": 2, "struggling": 2, "woes": 2, "slowdown": 2, "slowing": 1,
     "slows": 1, "stalls": 1, "stalled": 1, "glut": 1, "oversupply": 2,
     "cuts guidance": 3, "misses estimates": 3, "profit warning": 3,
+    # bubble / overheating / debt-risk language
+    "bubble": 2, "bubbles": 2, "overheating": 2, "overheated": 2, "froth": 2,
+    "frothy": 2, "overvalued": 2, "overvaluation": 2, "ballooning": 2,
+    "balloons": 1, "overleveraged": 2, "debt-fueled": 1, "speculative": 1,
+    "speculation": 1, "contagion": 2, "meltdown": 3,
 }
 
 NEGATORS = {"not", "no", "never", "without", "won't", "wont", "doesn't",
@@ -154,6 +159,25 @@ DOMINANT_NEGATIVE = re.compile(
 
 _WORD_RE = re.compile(r"[a-z'&-]+")
 
+# When an "up" move applies to one of these subjects, it's bearish, not bullish
+# ("Inflation Jumps to Two-Year High", "Yields Climb", "Costs Surge"). Detected
+# by co-occurrence of an up-word with an inflation/rates/cost subject word.
+_RISE_WORDS = re.compile(
+    r"\b(jump(s|ed)?|surg(e|es|ed)|soar(s|ed)?|climb(s|ed)?|rise(s|n)?|rising|"
+    r"rose|spike(s|d)?|jumps?|high|highs|accelerat(e|es|ed|ing)|hotter|"
+    r"balloons?|swell(s|ed)?)\b", re.IGNORECASE)
+_BAD_WHEN_RISING = re.compile(
+    r"\b(inflation|cpi|ppi|prices?|yield(s)?|rates?|bond yields?|borrowing|"
+    r"costs?|unemployment|jobless|deficit|debt|default(s)?)\b", re.IGNORECASE)
+
+
+def _inflation_context_penalty(text: str) -> float:
+    """Return a negative adjustment when an up-move applies to a bearish
+    subject (inflation, yields, costs...). 0.0 otherwise."""
+    if _RISE_WORDS.search(text) and _BAD_WHEN_RISING.search(text):
+        return -1.0
+    return 0.0
+
 
 def _raw_score(text: str) -> float:
     low = text.lower()
@@ -162,6 +186,13 @@ def _raw_score(text: str) -> float:
     dominant = bool(DOMINANT_NEGATIVE.search(text))
 
     total, hits = 0.0, 0
+
+    # "Inflation jumps / yields climb / costs surge" — up-move on a bearish
+    # subject. Add a negative signal so it isn't read as bullish.
+    infl = _inflation_context_penalty(text)
+    if infl:
+        total += infl * 3     # weight 3: strong enough to clear bearish threshold
+        hits += 1
 
     # multi-word phrases first (higher weight, more specific)
     for phrase, val in list(POSITIVE.items()) + [(p, -v) for p, v in NEGATIVE.items()]:

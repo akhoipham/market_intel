@@ -15,12 +15,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+TICKERS_CSV = DATA_DIR / "tickers.csv"           # single unified universe
+# Legacy sources (still read as a fallback if the unified file is absent):
 SEED_CSV = DATA_DIR / "tickers_seed.csv"
 EXPANDED_CSV = DATA_DIR / "universe_expanded.csv"
 
 # SEC requires a descriptive User-Agent on all requests.
 SEC_HEADERS = {"User-Agent": "market-intel-prototype contact@example.com"}
 SEC_TICKER_URL = "https://www.sec.gov/files/company_tickers.json"
+# Exchange-labeled variant (NASDAQ/NYSE/etc.) — preferred for the unified file.
+SEC_TICKER_EXCHANGE_URL = "https://www.sec.gov/files/company_tickers_exchange.json"
 
 
 @dataclass
@@ -54,15 +58,20 @@ class Company:
         return sorted(cleaned, key=len, reverse=True)
 
 
-def load_universe(path: Path = SEED_CSV) -> list[Company]:
-    """Load the curated seed. If the expanded universe (from exchange CSVs)
-    exists, merge it in — curated entries win on conflicts because they carry
-    hand-tuned aliases and ambiguity flags."""
-    curated = _load_csv(path)
+def load_universe(path: Path = TICKERS_CSV) -> list[Company]:
+    """Load the single unified ticker universe (data/tickers.csv).
+
+    This file is the merge of the curated seed, the NASDAQ/NYSE bulk list, and
+    the SEC full list — one row per ticker, with curated aliases and ambiguity
+    flags preserved. If it's missing (e.g. first run before regeneration), fall
+    back to merging the legacy seed + expanded files."""
+    if path.exists():
+        return _load_csv(path)
+    # ---- legacy fallback ----
+    curated = _load_csv(SEED_CSV)
     if not EXPANDED_CSV.exists():
         return curated
     by_ticker = {c.ticker.upper(): c for c in _load_csv(EXPANDED_CSV)}
-    # Overlay curated entries (they have better aliases/ambiguity).
     for c in curated:
         by_ticker[c.ticker.upper()] = c
     return list(by_ticker.values())
@@ -84,24 +93,46 @@ def _load_csv(path: Path) -> list[Company]:
 
 
 def refresh_from_sec(out_path: Path = DATA_DIR / "tickers_sec.json") -> int:
-    """Download the full SEC ticker list (~10k US-listed names).
-
-    These are used for cashtag/exchange-tag matching only (never bare name
-    matching, since we don't have curated aliases or ambiguity flags for them).
-    Run this once a week; it's a single small request.
+    """Download the current SEC company list with exchange labels and save the
+    long-tail map to tickers_sec.json. Run weekly from CI (SEC isn't blocked
+    there). The unified data/tickers.csv is then rebuilt from this by
+    consolidate_tickers.consolidate().
     """
     import requests
 
-    resp = requests.get(SEC_TICKER_URL, headers=SEC_HEADERS, timeout=30)
-    resp.raise_for_status()
-    raw = resp.json()
-    slim = {v["ticker"].upper(): {"name": v["title"], "cik": v["cik_str"]}
-            for v in raw.values()}
+    # Prefer the exchange-labeled file; fall back to the name-only one.
+    try:
+        resp = requests.get(SEC_TICKER_EXCHANGE_URL, headers=SEC_HEADERS, timeout=30)
+        resp.raise_for_status()
+        payload = resp.json()
+        ix = {name: i for i, name in enumerate(payload["fields"])}
+        slim = {}
+        for row in payload["data"]:
+            t = str(row[ix["ticker"]]).upper().strip()
+            if not t:
+                continue
+            slim[t] = {"name": str(row[ix["name"]]).strip(),
+                       "cik": row[ix["cik"]] if "cik" in ix else 0}
+    except Exception:
+        resp = requests.get(SEC_TICKER_URL, headers=SEC_HEADERS, timeout=30)
+        resp.raise_for_status()
+        slim = {v["ticker"].upper(): {"name": v["title"], "cik": v["cik_str"]}
+                for v in resp.json().values()}
+
     out_path.write_text(json.dumps(slim))
     return len(slim)
 
 
 def load_sec_tickers(path: Path = DATA_DIR / "tickers_sec.json") -> dict:
+    """Long-tail ticker->name map for cashtag/exchange-tag resolution of symbols
+    that aren't otherwise matched. Now derived from the unified tickers.csv (so
+    it always agrees with the universe). Falls back to the legacy SEC json, then
+    to empty."""
+    if TICKERS_CSV.exists():
+        out = {}
+        for c in _load_csv(TICKERS_CSV):
+            out[c.ticker.upper()] = {"name": c.name, "cik": 0}
+        return out
     if path.exists():
         return json.loads(path.read_text())
     return {}
