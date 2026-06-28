@@ -2,6 +2,7 @@ ticker,exchange,name,aliases,sector,ambiguous
 A,NYSE,Agilent Technologies,,Industrials,1
 AA,NYSE,Alcoa Corporation,Alcoa,Materials,0
 AAAU,US,Goldman Sachs Physical Gold ETF,,,0
+AAC,US,Ares Acquisition Corp III,,,0
 AACB,US,Artius II Acquisition Inc.,,,0
 AACBR,US,Artius II Acquisition Inc.,,,0
 AACBU,US,Artius II Acquisition Inc.,,,0
@@ -416,6 +417,7 @@ ALDF,US,Aldel Financial II Inc.,,,0
 ALDFU,US,Aldel Financial II Inc.,,,0
 ALDFW,US,Aldel Financial II Inc.,,,0
 ALDS,US,APPlife Digital Solutions Inc,,,0
+ALDSD,US,APPlife Digital Solutions Inc,,,0
 ALDX,NASDAQ,Aldeyra Therapeutics,,Healthcare,0
 ALEC,NASDAQ,Alector,,Healthcare,0
 ALEGF,US,ALLEGRO.EU SA/ADR,,,0
@@ -652,6 +654,7 @@ APPF,NASDAQ,AppFolio,,Technology,0
 APPN,NASDAQ,Appian,,Technology,0
 APPS,NASDAQ,Digital Turbine,,,0
 APRE,US,"Aprea Therapeutics, Inc.",,,0
+APSI,US,AQUA POWER SYSTEMS INC.,,,0
 APT,US,ALPHA PRO TECH LTD,,,0
 APTN,US,"ADAPTIN BIO, INC.",,,0
 APTOF,US,Aptose Biosciences Inc.,,,0
@@ -712,6 +715,7 @@ ARKR,US,ARK RESTAURANTS CORP,,,0
 ARL,NYSE,American Realty Investors,,Real Estate,0
 ARLO,NYSE,Arlo Technologies,,Consumer Staples,0
 ARLP,NASDAQ,Alliance Resource Partners L.P. Common Units representing Limited Partners Interests,,Energy,0
+ARLSF,US,ARGO GRAPHENE SOLUTIONS CORP.,,,0
 ARM,NASDAQ,Arm Holdings,Arm Holdings,Technology,0
 ARMK,NYSE,Aramark,,Consumer Discretionary,0
 ARMP,US,"Armata Pharmaceuticals, Inc.",,,0
@@ -1290,6 +1294,7 @@ BIREF,US,Birchcliff Energy Ltd./ADR,,,0
 BIREY,US,Birchcliff Energy Ltd./ADR,,,0
 BIRK,NYSE,Birkenstock Holding plc,,Consumer Discretionary,0
 BIT,US,BlackRock Multi-Sector Income Trust,,,0
+BITA,US,iShares Bitcoin Premium Income ETF,,,0
 BITB,US,Bitwise Bitcoin ETF,,,0
 BITTF,US,BITTERROOT RESOURCES LTD,,,0
 BITW,US,Bitwise 10 Crypto Index ETF,,,0
@@ -1399,7 +1404,9 @@ BML-PJ,US,BANK OF AMERICA CORP /DE/,,,0
 BML-PL,US,BANK OF AMERICA CORP /DE/,,,0
 BMM,NASDAQ,Blue Moon Metals,,,0
 BMN,US,BlackRock 2037 Municipal Target Term Trust,,,0
+BMNEP,US,"BITMINE IMMERSION TECHNOLOGIES, INC.",,,0
 BMNM,US,"BIMINI CAPITAL MANAGEMENT, INC.",,,0
+BMNP,US,"BITMINE IMMERSION TECHNOLOGIES, INC.",,,0
 BMNR,NYSE,BitMine Immersion Technologies,,Financials,0
 BMO,TSX,Bank of Montreal,Bank of Montreal|BMO,Financials,0
 BMOK,US,BM Acquisition Corp.,,,0
@@ -1465,6 +1472,7 @@ BORR,NYSE,Borr Drilling Limited Common Shares,,Energy,0
 BOSC,US,BOS BETTER ONLINE SOLUTIONS LTD,,,0
 BOT,US,"RoboStrategy, Inc.",,,0
 BOTJ,NASDAQ,Bank of the James Financial Group,,Financials,0
+BOTX,US,DATZ WORLD HOLDINGS CORP.,,,0
 BOTY,US,"LINGERIE FIGHTING CHAMPIONSHIPS, INC.",,,0
 BOW,NYSE,Bowhead Specialty Holdings,,Financials,0
 BOX,NYSE,Box,,Technology,1
@@ -1614,7 +1622,6 @@ BTTC,US,Black Titan Corp,,,0
 BTU,NYSE,Peabody Energy,,Energy,0
 BTX,NYSE,BlackRock Technology and Private Equity Term Trust Common Shares of Beneficial Interest,,,0
 BTZ,NYSE,BlackRock Credit Allocation Income Trust,,Financials,0
-BTZRF,US,Bitzero Holdings Inc.,,,0
 BUD,NYSE,Anheuser-Busch Inbev SA Sponsored ADR (Belgium),,Consumer Staples,0
 BUDA,US,"BUDA JUICE, INC.",,,0
 BUDFF,US,Anheuser-Busch InBev SA/NV,,,0
@@ -1775,6 +1782,7 @@ CATY,NASDAQ,Cathay General Bancorp,,Financials,0
 CAVA,NYSE,CAVA Group,,Consumer Discretionary,0
 CAZGF,US,Catapult Group International Ltd,,,0
 CB,NYSE,Chubb Limited,,Financials,0
+CBAGY,US,Carabao Group Public Co Limited/ADR,,,0
 CBAI,US,Coolbit Technologies Ltd,,,0
 CBAN,NYSE,Colony Bankcorp,,Financials,0
 CBAT,NASDAQ,CBAK Energy Technology,,,0
@@ -1932,6 +1940,7 @@ CFG-PE,US,CITIZENS FINANCIAL GROUP INC/RI,,,0
 CFG-PH,US,CITIZENS FINANCIAL GROUP INC/RI,,,0
 CFG-PI,US,CITIZENS FINANCIAL GROUP INC/RI,,,0
 CFNB,US,CALIFORNIA FIRST LEASING CORP,,,0
+CFNBD,US,CALIFORNIA FIRST LEASING CORP,,,0
 CFND,US,C1 Fund Inc.,,,0
 CFOO,US,China Foods Holdings Ltd.,,,0
 CFR,NYSE,Cullen/Frost Bankers,,Financials,0
@@ -1957,6 +1966,7 @@ CGNT,NASDAQ,Cognyte Software Ltd.,,Technology,0
 CGNX,NASDAQ,Cognex,,Industrials,0
 CGO,US,CALAMOS GLOBAL TOTAL RETURN FUND,,,0
 CGON,NASDAQ,CG Oncology,,Healthcare,0
+CGPCF,US,Carabao Group Public Co Limited/ADR,,,0
 CGTL,US,Creative Global Technology Holdings Ltd,,,0
 CGTX,NASDAQ,Cognition Therapeutics,,Healthcare,0
 CHA,NASDAQ,Chagee Holdings Limited,,Consumer Discretionary,0
@@ -2105,6 +2115,8 @@ CLSDQ,US,"Clearside Biomedical, Inc.",,,0
 CLSK,NASDAQ,CleanSpark Inc.,CleanSpark,Technology,0
 CLSKW,NASDAQ,CleanSpark,,Financials,0
 CLST,NASDAQ,Catalyst Bancorp,,Financials,0
+CLVLF,US,Clinuvel Pharmaceuticals Ltd,,,0
+CLVLY,US,Clinuvel Pharmaceuticals Ltd,,,0
 CLVT,NYSE,Clarivate Plc,,Technology,0
 CLW,NYSE,Clearwater Paper,,Materials,0
 CLWT,US,EURO TECH HOLDINGS CO LTD,,,0
@@ -2419,6 +2431,7 @@ CSL,NYSE,Carlisle Companies Incorporated,,Industrials,0
 CSLLY,US,CSL LTD,,,0
 CSPI,NASDAQ,CSP,,Technology,0
 CSQ,NASDAQ,Calamos Strategic Total Return,,Financials,0
+CSQR,US,"Csquare, Inc.",,,0
 CSR,NYSE,D/B/A Centerspace,,Real Estate,0
 CSTAF,US,Constellation Acquisition Corp I,,,0
 CSTE,NASDAQ,Caesarstone Ltd.,,Industrials,0
@@ -2442,8 +2455,10 @@ CTATF,US,"Contemporary Amperex Technology Co., Limited/ADR",,,0
 CTBI,NASDAQ,Community Trust Bancorp,,Financials,0
 CTC.A,TSX,Canadian Tire Corporation,Canadian Tire,Consumer Discretionary,0
 CTEV,NYSE,Claritev,,Consumer Discretionary,0
+CTGG,US,QWEST CORP,,,0
 CTGL,US,SKYTECH ORION GLOBAL CORP.,,,0
 CTGO,US,Contango Silver & Gold Inc.,,,0
+CTHH,US,QWEST CORP,,,0
 CTKB,NASDAQ,Cytek Biosciences,,Industrials,0
 CTM,US,"Castellum, Inc.",,,0
 CTMX,NASDAQ,CytomX Therapeutics,,Healthcare,0
@@ -2490,6 +2505,7 @@ CURLF,US,"Curaleaf Holdings, Inc.",,,0
 CURR,NASDAQ,Currenc Group,,Consumer Discretionary,0
 CURV,NYSE,Torrid Holdings,,Consumer Discretionary,0
 CURX,US,Curanex Pharmaceuticals Inc,,,0
+CUVL,US,Clinuvel Pharmaceuticals Ltd,,,0
 CUX,US,CopperTech Metals Inc.,,,0
 CUZ,NYSE,Cousins Properties Incorporated,,Real Estate,0
 CV,NASDAQ,CapsoVision,,Healthcare,0
@@ -2541,6 +2557,7 @@ CXE,US,MFS HIGH INCOME MUNICIPAL TRUST,,,0
 CXH,US,MFS INVESTMENT GRADE MUNICIPAL TRUST,,,0
 CXII,US,Churchill Capital Corp XII,,,0
 CXIIU,US,Churchill Capital Corp XII,,,0
+CXIIW,US,Churchill Capital Corp XII,,,0
 CXM,NYSE,Sprinklr,,Technology,0
 CXMSF,US,CEMEX SAB DE CV,,,0
 CXT,NYSE,Crane NXT Co.,,Industrials,0
@@ -3036,7 +3053,6 @@ ELME,NYSE,Elme Communities,,Real Estate,0
 ELMT,NASDAQ,The Elmet Group Co.,,Industrials,0
 ELOG,US,Eastern International Ltd.,,,0
 ELOX,US,"Eloxx Pharmaceuticals, Inc.",,,0
-ELOXD,US,"Eloxx Pharmaceuticals, Inc.",,,0
 ELPC,NYSE,Companhia Paranaense de Energia (COPEL),,Utilities,0
 ELPW,US,Elong Power Holding Ltd.,,,0
 ELRE,US,Yinfu Gold Corp.,,,0
@@ -3544,6 +3560,7 @@ FLYW,NASDAQ,Flywire,,Consumer Discretionary,0
 FLYX,US,FLYEXCLUSIVE INC.,,,0
 FLYX-WT,US,FLYEXCLUSIVE INC.,,,0
 FLYYQ,US,"Spirit Aviation Holdings, Inc.",,,0
+FLZH,US,"Flash Sports & Media Holdings, Inc.",,,0
 FM,TSX,First Quantum Minerals,,Materials,0
 FMAC,US,Future Money Acquisition Corp,,,0
 FMACR,US,Future Money Acquisition Corp,,,0
@@ -3723,6 +3740,7 @@ FTDR,NASDAQ,Frontdoor,,Consumer Discretionary,0
 FTEK,US,"FUEL TECH, INC.",,,0
 FTF,US,FRANKLIN LTD DURATION INCOME TRUST,,,0
 FTFT,US,Future FinTech Group Inc.,,,0
+FTH,US,"Sensei Biotherapeutics, Inc.",,,0
 FTHA,US,Forefront Tech Holdings Acquisition Corp,,,0
 FTHAU,US,Forefront Tech Holdings Acquisition Corp,,,0
 FTHM,US,Fathom Holdings Inc.,,,0
@@ -3943,8 +3961,6 @@ GGAZF,US,Goldgroup Mining Inc.,,,0
 GGB,NYSE,Gerdau S.A.,,Industrials,0
 GGBY,US,Alpha Investment Inc.,,,0
 GGG,NYSE,Graco,,Industrials,0
-GGLAP,US,Alphabet Inc.,,,0
-GGLBP,US,Alphabet Inc.,,,0
 GGLXF,US,GGL RESOURCES CORP.,,,0
 GGN,US,"GAMCO Global Gold, Natural Resources & Income Trust",,,0
 GGN-PB,US,"GAMCO Global Gold, Natural Resources & Income Trust",,,0
@@ -4042,6 +4058,7 @@ GLNK,US,Grayscale Chainlink Trust ETF,,,0
 GLNS,US,Golden Star Resource Corp.,,,0
 GLO,US,Clough Global Opportunities Fund,,,0
 GLOB,NYSE,Globant S.A. Common Shares,,Technology,0
+GLOH,US,"Glow Holdings, Inc.",,,0
 GLOO,NASDAQ,Gloo Holdings,,Technology,0
 GLOP-PA,US,GasLog Partners LP,,,0
 GLOP-PB,US,GasLog Partners LP,,,0
@@ -4110,6 +4127,7 @@ GNW,NYSE,Genworth Financial Inc,,Financials,0
 GO,NASDAQ,Grocery Outlet Holding Corp.,,Consumer Staples,1
 GOAI,NASDAQ,Eva Live,,Technology,0
 GOCO,US,"GoHealth, Inc.",,,0
+GOCOQ,US,"GoHealth, Inc.",,,0
 GOF,US,GUGGENHEIM STRATEGIC OPPORTUNITIES FUND,,,0
 GOGO,NASDAQ,Gogo,,Consumer Discretionary,0
 GOGR,US,Go Green Global Technologies Corp.,,,0
@@ -4313,6 +4331,7 @@ GXO,NYSE,GXO Logistics,,Consumer Discretionary,0
 GXRP,US,Grayscale XRP Trust ETF,,,0
 GXXM,US,"GEX MANAGEMENT, INC.",,,0
 GYGLF,US,Guzman y Gomez Ltd,,,0
+GYGY,US,Game Your Game Inc.,,,0
 GYRE,NASDAQ,Gyre Therapeutics,,Healthcare,0
 GYRO,US,"Gyrodyne, LLC",,,0
 H,NYSE,Hyatt Hotels,,Consumer Discretionary,0
@@ -4500,6 +4519,8 @@ HOLOW,US,MicroCloud Hologram Inc.,,,0
 HOMB,NYSE,Home BancShares,,Financials,0
 HON,NASDAQ,Honeywell International,Honeywell,Industrials,0
 HONA,US,Honeywell Aerospace Inc.,,,0
+HONAV,US,Honeywell Aerospace Inc.,,,0
+HONIV,US,HONEYWELL INTERNATIONAL INC,,,0
 HOOD,NASDAQ,Robinhood Markets,Robinhood,Financials,0
 HOOK,US,HOOKIPA Pharma Inc.,,,0
 HOPE,NASDAQ,Hope Bancorp,,Financials,1
@@ -4656,6 +4677,7 @@ IACOU,US,Idea Acquisition Corp.,,,0
 IACOW,US,Idea Acquisition Corp.,,,0
 IACQ,US,Irenic Acquisition Corp.,,,0
 IACQU,US,Irenic Acquisition Corp.,,,0
+IACQW,US,Irenic Acquisition Corp.,,,0
 IAE,US,Voya Asia Pacific High Dividend Equity Income Fund,,,0
 IAF,US,"ABRDN AUSTRALIA EQUITY FUND, INC.",,,0
 IAG,NYSE,Iamgold,,Materials,0
@@ -5045,6 +5067,7 @@ JAN,NYSE,Janus Living,,Real Estate,0
 JANL,US,JANEL CORP,,,0
 JANX,NASDAQ,Janux Therapeutics,,Healthcare,0
 JATT,US,JATT II Acquisition Corp.,,,0
+JAYGF,US,Blue Jay Gold Corp.,,,0
 JAZZ,NASDAQ,Jazz Pharmaceuticals plc,,Healthcare,0
 JBDI,US,JBDI Holdings Ltd,,,0
 JBGS,NYSE,JBG SMITH Properties Common Shares,,Real Estate,0
@@ -5176,6 +5199,7 @@ KARX,US,Karbon-X Corp.,,,0
 KATJF,US,Knowledge Atlas Technology Joint Stock Co Limited/ADR,,,0
 KAVL,US,"Kaival Brands Innovations Group, Inc.",,,0
 KAYS,US,"Kaya Holdings, Inc.",,,0
+KAZR,US,Skyline Builders Group Holding Ltd,,,0
 KB,NYSE,KB Financial Group Inc,,Financials,0
 KBDC,NYSE,Kayne Anderson BDC,,,0
 KBGGY,US,Kongsberg Gruppen ASA/ADR,,,0
@@ -5231,6 +5255,7 @@ KFRC,NYSE,Kforce,,Consumer Discretionary,0
 KFS,US,KINGSWAY Corp,,,0
 KFY,NYSE,Korn Ferry,,Consumer Discretionary,0
 KG,NASDAQ,Kestrel Group Ltd.,,Financials,0
+KGBMY,US,Kongsberg Maritime ASA/ADR,,,0
 KGC,NYSE,Kinross Gold,,Materials,0
 KGCRF,US,KINROSS GOLD CORP,,,0
 KGEI,NASDAQ,Kolibri Global Energy,,Energy,0
@@ -5397,6 +5422,7 @@ KYIVW,NASDAQ,Kyivstar Group Ltd. Warrant,,Communication Services,0
 KYMR,NASDAQ,Kymera Therapeutics,,Healthcare,0
 KYN,NYSE,Kayne Anderson Energy Infrastructure Fund,,Financials,0
 KYNB,US,"KYNTRA BIO, INC.",,,0
+KYOAY,US,KYOCERA CORP,,,0
 KYOCF,US,KYOCERA CORP,,,0
 KYOCY,US,KYOCERA CORP,,,0
 KYTFY,US,Kyoto Financial Group Inc/ADR,,,0
@@ -5479,6 +5505,7 @@ LE,NASDAQ,Lands' End,,Consumer Discretionary,0
 LEA,NYSE,Lear,,Consumer Discretionary,0
 LEAT,US,Leatt Corp,,,0
 LECO,NASDAQ,Lincoln Electric Holdings,,Industrials,0
+LEDR,US,Leader's Advantage Acquisition Corp.,,,0
 LEDS,US,SemiLEDs Corp,,,0
 LEE,NASDAQ,Lee Enterprises Incorporated,,Consumer Discretionary,0
 LEEEF,US,Leef Brands Inc.,,,0
@@ -5555,6 +5582,7 @@ LII,NYSE,Lennox International,,Industrials,0
 LILA,NASDAQ,Liberty Latin America Ltd.,,Communication Services,0
 LILAB,US,Liberty Latin America Ltd.,,,0
 LILAK,NASDAQ,Liberty Latin America Ltd.,,Communication Services,0
+LILAP,US,Liberty Latin America Ltd.,,,0
 LILAV,US,Liberty Latin America Ltd.,,,0
 LILIF,US,Argentina Lithium & Energy Corp.,,,0
 LILKV,US,Liberty Latin America Ltd.,,,0
@@ -6143,6 +6171,7 @@ MNY,NASDAQ,MoneyHero Limited,,Consumer Discretionary,0
 MNYCY,US,Manycore Tech Inc./ADR,,,0
 MNYWW,US,MoneyHero Ltd,,,0
 MNZLY,US,Mercury NZ Ltd./ADR,,,0
+MNZO,US,Exxsun Corp,,,0
 MO,NYSE,Altria Group,Altria,Consumer Staples,0
 MOB,NASDAQ,Mobilicom Limited,,Industrials,0
 MOBBW,US,Mobilicom Ltd,,,0
@@ -6246,6 +6275,7 @@ MSGE,NYSE,Madison Square Garden Entertainment Corp.,,Consumer Discretionary,0
 MSGM,US,Motorsport Games Inc.,,,0
 MSGS,NYSE,Madison Square Garden Sports Corp.,,Consumer Discretionary,0
 MSGY,US,Masonglory Ltd,,,0
+MSH,US,MAO SHAN HUANG HOLDINGS Ltd,,,0
 MSI,NYSE,Motorola Solutions,,Technology,0
 MSIF,NYSE,MSC Income Fund,,Financials,0
 MSLE,NASDAQ,Satellos Bioscience,,Healthcare,0
@@ -6268,6 +6298,7 @@ MSW,US,Ming Shing Group Holdings Ltd,,,0
 MSYND,US,GREENLIT VENTURES INC.,,,0
 MT,NYSE,Arcelor Mittal NY Registry Shares NEW,,Industrials,0
 MTA,US,Metalla Royalty & Streaming Ltd.,,,0
+MTAK,US,Market Technology Acquisition Corp,,,0
 MTAL,NYSE,Metals Acquisition Corp. II,,Materials,0
 MTAL-UN,US,Metals Acquisition Corp. II,,,0
 MTAL-WT,US,Metals Acquisition Corp. II,,,0
@@ -6389,6 +6420,7 @@ NAMS,NASDAQ,NewAmsterdam Pharma Company N.V.,,Healthcare,0
 NAMSW,NASDAQ,NewAmsterdam Pharma Company N.V. Warrant,,Healthcare,0
 NAN,NYSE,Nuveen New York Quality Municipal Income Fund,,Financials,0
 NANO,US,ATII Holdings Inc.,,,0
+NARA,US,"Narragansett Bancorp, Inc.",,,0
 NASC,US,Can B Corp,,,0
 NAT,NYSE,Nordic American Tankers Limited,,Consumer Discretionary,0
 NATH,NASDAQ,Nathan's Famous,,Consumer Discretionary,0
@@ -6436,6 +6468,7 @@ NCLTY,US,"Nitori Holdings Co., Ltd.",,,0
 NCMI,NASDAQ,National CineMedia,,Consumer Discretionary,0
 NCNA,US,NuCana plc,,,0
 NCNO,NASDAQ,nCino,,Technology,0
+NCO,US,Southern Cross Acquisition I Corp.,,,0
 NCPL,US,Netcapital Inc.,,,0
 NCPLW,US,Netcapital Inc.,,,0
 NCRA,US,"NOCERA, INC.",,,0
@@ -6784,6 +6817,7 @@ NUVR,US,"Nuvera Communications, Inc.",,,0
 NUW,US,Nuveen AMT-Free Municipal Value Fund,,,0
 NUWE,US,"Nuwellis, Inc.",,,0
 NVA,US,Nova Minerals Ltd,,,0
+NVA-WT,US,Nova Minerals Ltd,,,0
 NVAAF,US,Nova Minerals Ltd,,,0
 NVACW,US,"Profusa, Inc.",,,0
 NVAWW,US,Nova Minerals Ltd,,,0
@@ -6913,6 +6947,7 @@ OCG,US,Oriental Culture Holding LTD,,,0
 OCGN,NASDAQ,Ocugen,,Healthcare,0
 OCGSF,US,Outcrop Silver & Gold Corp,,,0
 OCLN,US,"ORIGINCLEAR, INC.",,,0
+OCLT,US,OceanLight Acquisition Corp,,,0
 OCS,NASDAQ,Oculis Holding AG Ordinary shares,,Healthcare,0
 OCSAW,NASDAQ,Oculis Holding AG Warrants,,Healthcare,0
 OCSL,NASDAQ,Oaktree Specialty Lending,,Financials,0
@@ -7022,6 +7057,7 @@ ONTO,NYSE,Onto Innovation,,Industrials,0
 ONWRF,US,Onward Medical N.V./ADR,,,0
 ONWRY,US,Onward Medical N.V./ADR,,,0
 OOMA,NYSE,Ooma,,Technology,0
+OP,US,OpenPayd Global Holdings Ltd,,,0
 OPAD,US,Offerpad Solutions Inc.,,,0
 OPADW,US,Offerpad Solutions Inc.,,,0
 OPAL,NASDAQ,OPAL Fuels,,Utilities,0
@@ -7034,6 +7070,7 @@ OPENZ,NASDAQ,Opendoor Technologies Inc  Series Z Warrants each whole warrant exe
 OPFI,NYSE,OppFi,,Financials,0
 OPFI-WT,US,OppFi Inc.,,,0
 OPHC,US,"OptimumBank Holdings, Inc.",,,0
+OPI,US,OFFICE PROPERTIES INCOME TRUST,,,0
 OPIRQ,US,OFFICE PROPERTIES INCOME TRUST,,,0
 OPITQ,US,OFFICE PROPERTIES INCOME TRUST,,,0
 OPK,NASDAQ,OPKO Health,,Healthcare,0
@@ -7094,7 +7131,9 @@ OSG,NYSE,Octave Specialty Group,,Financials,0
 OSIS,NASDAQ,OSI Systems,,Technology,0
 OSK,NYSE,Oshkosh,,Industrials,0
 OSOL,US,Osprey Solana Trust,,,0
+OSOPF,US,Osotspa Public Co Limited/ADR,,,0
 OSPN,NASDAQ,OneSpan,,Technology,0
+OSPR,US,Osprey Acquisition Corp. III,,,0
 OSRH,US,"OSR Holdings, Inc.",,,0
 OSRHW,US,"OSR Holdings, Inc.",,,0
 OSS,NASDAQ,One Stop Systems,,Technology,0
@@ -7426,11 +7465,13 @@ PLBC,NASDAQ,Plumas Bancorp,,Financials,0
 PLBL,NASDAQ,Polibeli Group Ltd,,Consumer Discretionary,0
 PLBY,NASDAQ,Playboy,,Consumer Discretionary,0
 PLCE,NASDAQ,Children's Place,,Consumer Discretionary,0
+PLCI,US,Pelican Acquisition II Corp,,,0
 PLCKF,US,Plurilock Security Inc.,,,0
 PLD,NYSE,Prologis Inc.,Prologis,Real Estate,0
 PLDGP,US,"Prologis, Inc.",,,0
 PLG,US,PLATINUM GROUP METALS LTD,,,0
 PLGO,NYSE,Pelagos Insurance Capital Limited Common Shares,,Financials,0
+PLLMF,US,EDGE COPPER Corp,,,0
 PLMJF,US,Plum Acquisition Corp. III,,,0
 PLMK,US,"Plum Acquisition Corp, IV",,,0
 PLMKU,US,"Plum Acquisition Corp, IV",,,0
@@ -7455,6 +7496,7 @@ PLTS,US,Platinum Analytics Cayman Ltd,,,0
 PLTYF,US,"Plastec Technologies, Ltd.",,,0
 PLUG,NASDAQ,Plug Power,Plug Power,Energy,0
 PLUN,US,Plutonian Acquisition Corp. II,,,0
+PLUN-RI,US,Plutonian Acquisition Corp. II,,,0
 PLUN-UN,US,Plutonian Acquisition Corp. II,,,0
 PLUR,US,Pluri Inc.,,,0
 PLUS,NASDAQ,ePlus inc.,,Technology,0
@@ -8141,6 +8183,7 @@ RPRX,NASDAQ,Royalty Pharma plc,,Healthcare,0
 RPT,NYSE,Rithm Property Trust,,Real Estate,0
 RPT-PC,US,Rithm Property Trust Inc.,,,0
 RQI,NYSE,Cohen & Steers Quality Income Realty Fund Inc Common Shares,,Financials,0
+RQI-RW,US,COHEN & STEERS QUALITY INCOME REALTY FUND INC,,,0
 RR,NASDAQ,Richtech Robotics,,Industrials,0
 RRBI,NASDAQ,Red River Bancshares,,Consumer Discretionary,0
 RRC,NYSE,Range Resources,,Energy,0
@@ -8276,6 +8319,7 @@ SAJ,NYSE,Saratoga Investment Corp 8.00% Notes due 2027,,Financials,0
 SALM,US,"SALEM MEDIA GROUP, INC. /DE/",,,0
 SAM,NYSE,Boston Beer Company,,Consumer Staples,0
 SAMG,NASDAQ,Silvercrest Asset Management Group,,Financials,0
+SAMO,US,Samos Energy Acquisition Corp,,,0
 SAN,NYSE,Banco Santander S.A. Sponsored ADR (Spain),,Financials,0
 SANA,NASDAQ,Sana Biotechnology,,Healthcare,0
 SANG,NASDAQ,Sangoma Technologies,,Technology,0
@@ -8537,6 +8581,7 @@ SHPH,US,"Shuttle Pharmaceuticals Holdings, Inc.",,,0
 SHW,NYSE,Sherwin-Williams Company (The),,Consumer Discretionary,0
 SI,NYSE,Shoulder Innovations,,Healthcare,0
 SIAI,US,Silentium Ltd.,,,0
+SIAMY,US,Siam Global House Public Co Limited/ADR,,,0
 SIBN,NASDAQ,SI-BONE,,Healthcare,0
 SICCY,US,"SICC Co., Ltd./ADR",,,0
 SICOF,US,Silverco Mining Ltd.,,,0
@@ -8656,6 +8701,7 @@ SMBC,NASDAQ,Southern Missouri Bancorp,,Financials,0
 SMBK,NYSE,SmartFinancial,,Financials,0
 SMC,NYSE,Summit Midstream,,Utilities,0
 SMCI,NASDAQ,Super Micro Computer,Super Micro|Supermicro,Technology,0
+SMCIP,US,"Super Micro Computer, Inc.",,,0
 SMDRF,US,SIERRA MADRE GOLD & SILVER LTD.,,,0
 SMEGF,US,Siemens Energy AG/ADR,,,0
 SMERY,US,Siemens Energy AG/ADR,,,0
@@ -8685,6 +8731,8 @@ SMTC,NASDAQ,Semtech,,Technology,0
 SMTGF,US,SMA Solar Technology AG/ADR,,,0
 SMTI,NASDAQ,Sanara MedTech,,Healthcare,0
 SMTK,US,"SmartKem, Inc.",,,0
+SMTOF,US,SUMITOMO ELECTRIC INDUSTRIES LTD/ADR/,,,0
+SMTOY,US,SUMITOMO ELECTRIC INDUSTRIES LTD/ADR/,,,0
 SMWB,NYSE,Similarweb Ltd.,,Technology,0
 SMX,US,SMX (Security Matters) Public Ltd Co,,,0
 SMXT,US,"SolarMax Technology, Inc.",,,0
@@ -9150,6 +9198,7 @@ TBB,NYSE,AT&T,,Communication Services,0
 TBBB,NYSE,BBB Foods,,Consumer Staples,0
 TBBK,NASDAQ,The Bancorp Inc,,Financials,0
 TBCH,NASDAQ,Turtle Beach,,Communication Services,0
+TBCV,US,"Thunder Bridge Capital Partners V, Ltd.",,,0
 TBH,US,"Brag House Holdings, Inc.",,,0
 TBI,NYSE,TrueBlue,,Consumer Discretionary,0
 TBLA,NASDAQ,Taboola.com Ltd.,,Technology,0
@@ -9279,6 +9328,7 @@ TGS,NYSE,Transportadora de Gas del Sur SA TGS,,Utilities,0
 TGT,NYSE,Target Corporation,Target,Consumer Staples,1
 TGTX,NASDAQ,TG Therapeutics,,Healthcare,0
 TH,NASDAQ,Target Hospitality Corp.,,Consumer Discretionary,0
+THARY,US,Tharisa plc,,,0
 THC,NYSE,Tenet Healthcare,,Healthcare,0
 THCH,NASDAQ,TH International Limited Ordinary shares,,Consumer Discretionary,0
 THCLY,US,"Toho Co., Ltd./ADR",,,0
@@ -9322,6 +9372,7 @@ TKC,NYSE,Turkcell Iletisim Hizmetleri AS,,Communication Services,0
 TKCYY,US,"Tokyo Ohka Kogyo Co., Ltd./ADR",,,0
 TKDG,US,3 KNIGHTS DYNAMICS GROUP Ltd,,,0
 TKLF,US,"Tokyo Lifestyle Co., Ltd.",,,0
+TKLS,US,"Trutankless, Inc.",,,0
 TKMEF,US,"Tokyo Metro Co., Ltd./ADR",,,0
 TKMSF,US,TKMS AG & CO. KGAA/ADR,,,0
 TKMTY,US,"Tokyo Metro Co., Ltd./ADR",,,0
@@ -9572,6 +9623,7 @@ TVE,US,Tennessee Valley Authority,,,0
 TVGN,US,Tevogen Bio Holdings Inc.,,,0
 TVGNW,US,Tevogen Bio Holdings Inc.,,,0
 TVIV,US,Texas Ventures Acquisition IV Corp,,,0
+TVIVU,US,Texas Ventures Acquisition IV Corp,,,0
 TVRD,US,"Tvardi Therapeutics, Inc.",,,0
 TVTX,NASDAQ,Travere Therapeutics,,Healthcare,0
 TW,NASDAQ,Tradeweb Markets,,Financials,0
@@ -9892,6 +9944,7 @@ VICI,NYSE,VICI Properties,,Real Estate,0
 VICP,US,"Vicapsys Life Sciences, Inc.",,,0
 VICR,NASDAQ,Vicor,,Technology,0
 VIDA,US,VIDA Global Inc.,,,0
+VII,US,Viking Acquisition Corp. II,,,0
 VIIQ,US,VisitIQ Corp.,,,0
 VIK,NYSE,Viking Holdings Ltd,,Consumer Discretionary,0
 VINP,NASDAQ,Vinci Compass Investments Ltd.,,Financials,0
@@ -9990,6 +10043,7 @@ VRM,US,"Vroom, Inc.",,,0
 VRME,US,"VerifyMe, Inc.",,,0
 VRMWW,US,"Vroom, Inc.",,,0
 VRNO,US,Verano Holdings Corp.,,,0
+VRNOD,US,Verano Holdings Corp.,,,0
 VRNS,NASDAQ,Varonis Systems,,Technology,0
 VROYF,US,Vizsla Royalties Corp.,,,0
 VRRCF,US,VR Resources Ltd.,,,0
@@ -10187,6 +10241,7 @@ WKEY,NASDAQ,WISeKey International Holding Ltd,,Technology,0
 WKHS,US,Workhorse Group Inc.,,,0
 WKSP,US,Worksport Ltd,,,0
 WLCO,US,Wilco 63 Corp,,,0
+WLCOU,US,Wilco 63 Corp,,,0
 WLDN,NASDAQ,Willdan Group,,Consumer Discretionary,0
 WLDS,US,Wearable Devices Ltd.,,,0
 WLDSW,US,Wearable Devices Ltd.,,,0
@@ -10433,6 +10488,7 @@ YHNAU,US,YHN Acquisition I Ltd,,,0
 YI,US,"111, Inc.",,,0
 YIBO,NASDAQ,Planet Image International Limited,,Industrials,0
 YICC,US,Yorkville International Capital Corp.,,,0
+YICCU,US,Yorkville International Capital Corp.,,,0
 YJ,US,Yunji Inc.,,,0
 YKCLY,US,Yamato Kogyo Co. Ltd/ADR,,,0
 YLY,US,Zi Yun Dong Fang Ltd,,,0
@@ -10465,6 +10521,7 @@ YXT,US,YXT.COM GROUP HOLDING Ltd,,,0
 YYAI,US,AIRWA INC.,,,0
 YYGH,US,YY Group Holding Ltd.,,,0
 Z,NASDAQ,Zillow Group,Zillow,Real Estate,0
+ZABKY,US,Zabka Group S.A./ADR,,,0
 ZARE,US,Ares Real Estate Income Trust Inc.,,,0
 ZBAI,US,ATIF Holdings Ltd,,,0
 ZBAO,US,Zhibao Technology Inc.,,,0
@@ -10532,6 +10589,7 @@ ZS,NASDAQ,Zscaler Inc.,Zscaler,Technology,0
 ZSHLY,US,"Zensho Holdings Co., Ltd./ADR",,,0
 ZSHOF,US,"Zensho Holdings Co., Ltd./ADR",,,0
 ZSICY,US,"Zhejiang Sanhua Intelligent Controls Co., Ltd./ADR",,,0
+ZSINF,US,"Zhejiang Sanhua Intelligent Controls Co., Ltd./ADR",,,0
 ZSL,US,ProShares Trust II,,,0
 ZSPC,US,"zSpace, Inc.",,,0
 ZSQR,NASDAQ,Z Squared,,Financials,0
