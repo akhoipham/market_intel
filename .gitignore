@@ -1,0 +1,19 @@
+# Generated state — must never enter git history (see workflow: stored as a release asset)
+data/intel.db
+data/intel.db-journal
+data/intel.db-wal
+data/intel.db-shm
+data.json
+
+# Generated ticker caches (rebuilt by `run.py refresh-tickers`)
+data/tickers.csv
+data/tickers_sec.json
+data/marketcap_cache.json
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
